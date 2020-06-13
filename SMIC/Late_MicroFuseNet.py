@@ -67,7 +67,11 @@ for video in directorylisting:
            imagepath = videopath + "/" + framelisting[frame]
            image = cv2.imread(imagepath)
            landmarks = get_landmark(image)
-
+           if countimg<=1:
+               img=annotate_landmarks(image, landmarks)
+               imgplot = plt.imshow(img)
+               plt.show()
+               countimg+=1
            numpylandmarks = numpy.asarray(landmarks)
            eye_image = image[numpylandmarks[19][1]:numpylandmarks[1][1], numpylandmarks[1][0]:numpylandmarks[15][0]]
            eye_image = cv2.resize(eye_image, (32, 32), interpolation = cv2.INTER_AREA)
