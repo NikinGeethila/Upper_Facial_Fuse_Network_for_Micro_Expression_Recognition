@@ -62,7 +62,7 @@ for video in directorylisting:
     videopath = negativepath + video
     left_eye_frames = []
     right_eye_frames = []
-    nose_mouth_frames = []
+    nose_frames = []
     framelisting = os.listdir(videopath)
     framerange = [x for x in range(18)]
     for frame in framerange:
@@ -103,26 +103,32 @@ for video in directorylisting:
                img=annotate_landmarks(right_eye_image, landmarks)
                imgplot = plt.imshow(img)
                plt.show()
-           nose_mouth_image = image[numpylandmarks[2][1]:numpylandmarks[6][1], numpylandmarks[2][0]:numpylandmarks[14][0]]
-           nose_mouth_image = cv2.resize(nose_mouth_image, (32, 32), interpolation = cv2.INTER_AREA)
-           nose_mouth_image = cv2.cvtColor(nose_mouth_image, cv2.COLOR_BGR2GRAY)
+           up = numpylandmarks[27][1] - 5
+           down = max(numpylandmarks[31][1], numpylandmarks[32][1], numpylandmarks[33][1], numpylandmarks[34][1], numpylandmarks[35][1]) + 5
+           left = numpylandmarks[31][0]
+           right = numpylandmarks[35][0]
+
+           nose_image = image[up:down, left:right]
+
+           nose_image = cv2.resize(nose_image, (32, 32), interpolation = cv2.INTER_AREA)
+           nose_image = cv2.cvtColor(nose_image, cv2.COLOR_BGR2GRAY)
            if countimg<1:
-               img=annotate_landmarks(nose_mouth_image, landmarks)
+               img=annotate_landmarks(nose_image, landmarks)
                imgplot = plt.imshow(img)
                plt.show()
                countimg+=1
            left_eye_frames.append(left_eye_image)
            right_eye_frames.append(right_eye_image)
-           nose_mouth_frames.append(nose_mouth_image)
+           nose_frames.append(nose_image)
     left_eye_frames = numpy.asarray(left_eye_frames)
     right_eye_frames = numpy.asarray(right_eye_frames)
-    nose_mouth_frames = numpy.asarray(nose_mouth_frames)
+    nose_frames = numpy.asarray(nose_frames)
     left_eye_videoarray = numpy.rollaxis(numpy.rollaxis(left_eye_frames, 2, 0), 2, 0)
     right_eye_videoarray = numpy.rollaxis(numpy.rollaxis(right_eye_frames, 2, 0), 2, 0)
-    nose_mouth_videoarray = numpy.rollaxis(numpy.rollaxis(nose_mouth_frames, 2, 0), 2, 0)
+    nose_videoarray = numpy.rollaxis(numpy.rollaxis(nose_frames, 2, 0), 2, 0)
     left_eye_training_list.append(left_eye_videoarray)
     right_eye_training_list.append(right_eye_videoarray)
-    nose_training_list.append(nose_mouth_videoarray)
+    nose_training_list.append(nose_videoarray)
 
 directorylisting = os.listdir(positivepath)
 for video in directorylisting:
