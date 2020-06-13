@@ -45,9 +45,9 @@ def annotate_landmarks(img, landmarks, font_scale = 0.4):
 		cv2.circle(img, pos, 3, color=(0, 255, 255))
 	return img
 
-negativepath = '../../Dataset/HS/Negative/'
-positivepath = '../../Dataset/HS/Positive/'
-surprisepath = '../../Dataset/HS/Surprise/'
+negativepath = '../../../Dataset/SIMC_E_categorical/Negative/'
+positivepath = '../../../Dataset/SIMC_E_categorical/Positive/'
+surprisepath = '../../../Dataset/SIMC_E_categorical/Surprise/'
 
 eye_training_list = []
 nose_training_list = []
