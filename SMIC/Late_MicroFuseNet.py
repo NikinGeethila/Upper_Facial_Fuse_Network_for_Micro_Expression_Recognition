@@ -46,7 +46,7 @@ def annotate_landmarks(img, landmarks, font_scale = 0.4):
 		cv2.putText(img, str(idx), pos, fontFace=cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, fontScale=font_scale, color=(0, 0, 255))
 		cv2.circle(img, pos, 3, color=(0, 255, 255))
 	return img
-
+'''
 negativepath = '../../../Datasets/SIMC_E_categorical/Negative/'
 positivepath = '../../../Datasets/SIMC_E_categorical/Positive/'
 surprisepath = '../../../Datasets/SIMC_E_categorical/Surprise/'
@@ -193,14 +193,18 @@ numpy.save('numpy_training_datasets/late_microexpfusenetlefteyelabels.npy', left
 numpy.save('numpy_training_datasets/late_microexpfusenetrighteyelabels.npy', right_eye_training_labels)
 numpy.save('numpy_training_datasets/late_microexpfusenetnoselabels.npy', nose_traininglabels)
 
-
+'''
 # Load training images and labels that are stored in numpy array
-"""
-ntraining_set = numpy.load('numpy_training_datasets/late_microexpfusenetnoseimages.npy')
-etraining_set = numpy.load('numpy_training_datasets/late_microexpfuseneteyeimages.npy')
-eye_traininglabels = numpy.load('numpy_training_datasets/late_microexpfusenetnoselabels.npy')
-nose_traininglabels = numpy.load('numpy_training_datasets/late_microexpfuseneteyelabels.npy')
-"""
+
+left_eye_training_set = numpy.load('numpy_training_datasets/late_microexpfusenetlefteyeimages.npy')
+right_eye_training_set = numpy.load('numpy_training_datasets/late_microexpfusenetrighteyeimages.npy')
+nose_training_set = numpy.load('numpy_training_datasets/late_microexpfusenetnoseimages.npy')
+
+
+left_eye_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetlefteyelabels.npy')
+right_eye_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetrighteyelabels.npy')
+nose_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetnoselabels.npy')
+
 
 # Late MicroExpFuseNet Model
 left_eye_input = Input(shape = (1, 32, 32, 18))
@@ -262,30 +266,40 @@ model.load_weights('weights_late_microexpfusenet/weights-improvement-22-0.83.hdf
 left_eye_train_images, left_eye_validation_images, left_eye_train_labels, left_eye_validation_labels =  train_test_split(left_eye_training_set, left_eye_training_labels, test_size=0.2, shuffle=False)
 right_eye_train_images, right_eye_validation_images, right_eye_train_labels, right_eye_validation_labels =  train_test_split(right_eye_training_set, right_eye_training_labels, test_size=0.2, shuffle=False)
 nose_train_images, nose_validation_images, nose_train_labels, nose_validation_labels =  train_test_split(nose_training_set, nose_training_labels, test_size=0.2, shuffle=False)
+print(len(left_eye_train_images))
+print(len(left_eye_train_labels))
+print(len(left_eye_validation_images))
+print(len(left_eye_validation_labels))
+print(len(left_eye_training_set))
+print(len(left_eye_training_labels))
+print(152,121)
+
 
 # Save validation set in a numpy array
 numpy.save('numpy_validation_datasets/late_microexpfusenet_left_eye_val_images.npy', left_eye_validation_images)
 numpy.save('numpy_validation_datasets/late_microexpfusenet_right_eye_val_images.npy', right_eye_validation_images)
 numpy.save('numpy_validation_datasets/late_microexpfusenet_nose_val_images.npy', nose_validation_images)
+
 numpy.save('numpy_validation_datasets/late_microexpfusenet_left_eye_val_labels.npy', left_eye_validation_labels)
 numpy.save('numpy_validation_datasets/late_microexpfusenet_right_eye_val_labels.npy', right_eye_validation_labels)
 numpy.save('numpy_validation_datasets/late_microexpfusenet_nose_val_labels.npy', nose_validation_labels)
 
 # Training the model
-history = model.fit([left_eye_train_images,right_eye_train_images, nose_train_images], left_eye_train_labels, validation_data = ([left_eye_training_set,right_eye_training_set, nose_training_set], left_eye_train_labels), callbacks=callbacks_list, batch_size = 16, nb_epoch = 100, shuffle=True)
+history = model.fit([left_eye_train_images,right_eye_train_images, nose_train_images], left_eye_train_labels, validation_data = ([left_eye_validation_images,right_eye_validation_images, nose_validation_images], left_eye_validation_labels), callbacks=callbacks_list, batch_size = 16, nb_epoch = 100, shuffle=True)
 
 # Loading Load validation set from numpy array
-"""
-eimg = numpy.load('numpy_validation_datasets/late_microexpfusenet_eval_images.npy')
-nimg = numpy.load('numpy_validation_datasets/late_microexpfusenet_nval_images.npy')
-labels = numpy.load('numpy_validation_datasets/late_microexpfusenet_eval_labels.npy')
-"""
+
+elimg = numpy.load('numpy_validation_datasets/late_microexpfusenet_left_eye_val_images.npy')
+erimg = numpy.load('numpy_validation_datasets/late_microexpfusenet_right_eye_val_images.npy')
+nimg = numpy.load('numpy_validation_datasets/late_microexpfusenet_nose_val_images.npy')
+labels = numpy.load('numpy_validation_datasets/late_microexpfusenet_left_eye_val_labels.npy')
+
 
 # Finding Confusion Matrix using pretrained weights
-"""
-predictions = model.predict([eimg, nimg])
+
+predictions = model.predict([elimg,erimg, nimg])
 predictions_labels = numpy.argmax(predictions, axis=1)
 validation_labels = numpy.argmax(labels, axis=1)
 cfm = confusion_matrix(validation_labels, predictions_labels)
 print (cfm)
-"""
+
