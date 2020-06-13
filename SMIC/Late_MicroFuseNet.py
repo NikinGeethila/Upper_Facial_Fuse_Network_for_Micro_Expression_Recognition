@@ -132,50 +132,67 @@ for typepath in (negativepath,positivepath,surprisepath):
         nose_training_list.append(nose_videoarray)
 
 
-eye_training_list = numpy.asarray(eye_training_list)
+left_eye_training_list = numpy.asarray(left_eye_training_list)
+right_eye_training_list = numpy.asarray(right_eye_training_list)
 nose_training_list = numpy.asarray(nose_training_list)
 
-eye_trainingsamples = len(eye_training_list)
+left_eye_trainingsamples = len(left_eye_training_list)
+right_eye_trainingsamples = len(right_eye_training_list)
 nose_trainingsamples = len(nose_training_list)
 
-eye_traininglabels = numpy.zeros((eye_trainingsamples, ), dtype = int)
+left_eye_traininglabels = numpy.zeros((left_eye_trainingsamples, ), dtype = int)
+right_eye_traininglabels = numpy.zeros((right_eye_trainingsamples, ), dtype = int)
 nose_traininglabels = numpy.zeros((nose_trainingsamples, ), dtype = int)
 
-eye_traininglabels[0:66] = 0
-eye_traininglabels[66:113] = 1
-eye_traininglabels[113:156] = 2
+left_eye_traininglabels[0:66] = 0
+left_eye_traininglabels[66:113] = 1
+left_eye_traininglabels[113:156] = 2
+
+right_eye_traininglabels[0:66] = 0
+right_eye_traininglabels[66:113] = 1
+right_eye_traininglabels[113:156] = 2
 
 nose_traininglabels[0:66] = 0
 nose_traininglabels[66:113] = 1
 nose_traininglabels[113:156] = 2
 
-eye_traininglabels = np_utils.to_categorical(eye_traininglabels, 3)
+left_eye_traininglabels = np_utils.to_categorical(left_eye_traininglabels, 3)
+right_eye_traininglabels = np_utils.to_categorical(right_eye_traininglabels, 3)
 nose_traininglabels = np_utils.to_categorical(nose_traininglabels, 3)
 
-etraining_data = [eye_training_list, eye_traininglabels]
-(etrainingframes, etraininglabels) = (etraining_data[0], etraining_data[1])
-etraining_set = numpy.zeros((eye_trainingsamples, 1, 32, 32, 18))
-for h in range(eye_trainingsamples):
-	etraining_set[h][0][:][:][:] = etrainingframes[h,:,:,:]
+left_eye_training_data = [left_eye_training_list, left_eye_traininglabels]
+right_eye_training_data = [right_eye_training_list, right_eye_traininglabels]
+nose_training_training_data = [nose_training_list, nose_traininglabels]
 
-etraining_set = etraining_set.astype('float32')
-etraining_set -= numpy.mean(etraining_set)
-etraining_set /= numpy.max(etraining_set)
+(left_eye_training_frames, left_eye_training_labels) = (left_eye_training_data[0], left_eye_training_data[1])
+(right_eye_training_frames, right_eye_training_labels) = (right_eye_training_data[0], right_eye_training_data[1])
+(nose_training_frames, nose_training_labels) = (nose_training_training_data[0], nose_training_training_data[1])
 
-ntraining_data = [nose_training_list, nose_traininglabels]
-(ntrainingframes, ntraininglabels) = (ntraining_data[0], ntraining_data[1])
-ntraining_set = numpy.zeros((nose_trainingsamples, 1, 32, 32, 18))
+left_eye_training_set = numpy.zeros((left_eye_trainingsamples, 1, 32, 32, 18))
+right_eye_training_set = numpy.zeros((right_eye_trainingsamples, 1, 32, 32, 18))
+nose_training_set = numpy.zeros((nose_trainingsamples, 1, 32, 32, 18))
+
+for h in range(left_eye_trainingsamples):
+	left_eye_training_set[h][0][:][:][:] = left_eye_training_frames[h,:,:,:]
+for h in range(right_eye_trainingsamples):
+	right_eye_training_set[h][0][:][:][:] = right_eye_training_frames[h,:,:,:]
 for h in range(nose_trainingsamples):
-        ntraining_set[h][0][:][:][:] = ntrainingframes[h,:,:,:]
+    nose_training_set[h][0][:][:][:] = nose_training_frames[h, :, :, :]
 
-ntraining_set = ntraining_set.astype('float32')
-ntraining_set -= numpy.mean(ntraining_set)
-ntraining_set /= numpy.max(ntraining_set)
+for training_set in (left_eye_training_set,right_eye_training_set,nose_training_set):
+    training_set = training_set.astype('float32')
+    training_set -= numpy.mean(training_set)
+    training_set /= numpy.max(training_set)
 
-numpy.save('numpy_training_datasets/late_microexpfusenetnoseimages.npy', ntraining_set)
-numpy.save('numpy_training_datasets/late_microexpfuseneteyeimages.npy', etraining_set)
+
+numpy.save('numpy_training_datasets/late_microexpfusenetlefteyeimages.npy', left_eye_training_set)
+numpy.save('numpy_training_datasets/late_microexpfusenetrighteyeimages.npy', right_eye_training_set)
+numpy.save('numpy_training_datasets/late_microexpfusenetnoseimages.npy', nose_training_set)
+
+numpy.save('numpy_training_datasets/late_microexpfusenetlefteyelabels.npy', left_eye_training_labels)
+numpy.save('numpy_training_datasets/late_microexpfusenetrighteyelabels.npy', right_eye_training_labels)
 numpy.save('numpy_training_datasets/late_microexpfusenetnoselabels.npy', nose_traininglabels)
-numpy.save('numpy_training_datasets/late_microexpfuseneteyelabels.npy', eye_traininglabels)
+
 
 # Load training images and labels that are stored in numpy array
 """
@@ -186,9 +203,9 @@ nose_traininglabels = numpy.load('numpy_training_datasets/late_microexpfusenetey
 """
 
 # Late MicroExpFuseNet Model
-eye_input = Input(shape = (1, 32, 32, 18))
-eye_conv = Convolution3D(32, (3, 3, 15))(eye_input)
-ract_1 = Activation('relu')(eye_conv)
+left_eye_input = Input(shape = (1, 32, 32, 18))
+left_eye_conv = Convolution3D(32, (3, 3, 15))(left_eye_input)
+ract_1 = Activation('relu')(left_eye_conv)
 maxpool_1 = MaxPooling3D(pool_size=(3, 3, 3))(ract_1)
 ract_2 = Activation('relu')(maxpool_1)
 dropout_1 = Dropout(0.5)(ract_2)
@@ -198,24 +215,36 @@ dropout_2 = Dropout(0.5)(dense_1)
 dense_2= Dense(128, )(dropout_2)
 dropout_3 = Dropout(0.5)(dense_2)
 
-nose_input = Input(shape = (1, 32, 32, 18))
-nose_conv = Convolution3D(32, (3, 3, 15))(nose_input)
-ract_3 = Activation('relu')(nose_conv)
+right_eye_input = Input(shape = (1, 32, 32, 18))
+right_eye_conv = Convolution3D(32, (3, 3, 15))(right_eye_input)
+ract_3 = Activation('relu')(right_eye_conv)
 maxpool_2 = MaxPooling3D(pool_size=(3, 3, 3))(ract_3)
 ract_4 = Activation('relu')(maxpool_2)
-dropout_2 = Dropout(0.5)(ract_4)
-flatten_2 = Flatten()(dropout_2)
+dropout_4 = Dropout(0.5)(ract_4)
+flatten_2 = Flatten()(dropout_4)
 dense_3 = Dense(1024, )(flatten_2)
-dropout_4 = Dropout(0.5)(dense_3)
-dense_4 = Dense(128, )(dropout_4)
-dropout_5 = Dropout(0.5)(dense_4)
+dropout_5 = Dropout(0.5)(dense_3)
+dense_4= Dense(128, )(dropout_5)
+dropout_6= Dropout(0.5)(dense_4)
 
-concat = Concatenate(axis = 1)([dropout_3, dropout_5])
+nose_input = Input(shape = (1, 32, 32, 18))
+nose_conv = Convolution3D(32, (3, 3, 15))(nose_input)
+ract_5 = Activation('relu')(nose_conv)
+maxpool_3 = MaxPooling3D(pool_size=(3, 3, 3))(ract_5)
+ract_6 = Activation('relu')(maxpool_3)
+dropout_7 = Dropout(0.5)(ract_6)
+flatten_3 = Flatten()(dropout_7)
+dense_5= Dense(1024, )(flatten_3)
+dropout_8 = Dropout(0.5)(dense_5)
+dense_6 = Dense(128, )(dropout_8)
+dropout_9 = Dropout(0.5)(dense_6)
 
-dense_5 = Dense(3, )(concat)
-activation = Activation('softmax')(dense_5)
+concat = Concatenate(axis = 1)([dropout_3, dropout_6,dropout_9])
 
-model = Model(inputs = [eye_input, nose_input], outputs = activation)
+dense_7 = Dense(3, )(concat)
+activation = Activation('softmax')(dense_7)
+
+model = Model(inputs = [left_eye_input,right_eye_input, nose_input], outputs = activation)
 model.compile(loss = 'categorical_crossentropy', optimizer = 'SGD', metrics = ['accuracy'])
 
 filepath="weights_late_microexpfusenet/weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
@@ -230,17 +259,20 @@ model.load_weights('weights_late_microexpfusenet/weights-improvement-22-0.83.hdf
 """
 
 # Spliting the dataset into training and validation sets
-etrain_images, evalidation_images, etrain_labels, evalidation_labels =  train_test_split(etraining_set, eye_traininglabels, test_size=0.2, shuffle=False)
-ntrain_images, nvalidation_images, ntrain_labels, nvalidation_labels =  train_test_split(ntraining_set, nose_traininglabels, test_size=0.2, shuffle=False)
+left_eye_train_images, left_eye_validation_images, left_eye_train_labels, left_eye_validation_labels =  train_test_split(left_eye_training_set, left_eye_training_labels, test_size=0.2, shuffle=False)
+right_eye_train_images, right_eye_validation_images, right_eye_train_labels, right_eye_validation_labels =  train_test_split(right_eye_training_set, right_eye_training_labels, test_size=0.2, shuffle=False)
+nose_train_images, nose_validation_images, nose_train_labels, nose_validation_labels =  train_test_split(nose_training_set, nose_training_labels, test_size=0.2, shuffle=False)
 
 # Save validation set in a numpy array
-numpy.save('numpy_validation_datasets/late_microexpfusenet_eval_images.npy', evalidation_images)
-numpy.save('numpy_validation_datasets/late_microexpfusenet_nval_images.npy', nvalidation_images)
-numpy.save('numpy_validation_datasets/late_microexpfusenet_eval_labels.npy', evalidation_labels)
-numpy.save('numpy_validation_datasets/late_microexpfusenet_nval_labels.npy', nvalidation_labels)
+numpy.save('numpy_validation_datasets/late_microexpfusenet_left_eye_val_images.npy', left_eye_validation_images)
+numpy.save('numpy_validation_datasets/late_microexpfusenet_right_eye_val_images.npy', right_eye_validation_images)
+numpy.save('numpy_validation_datasets/late_microexpfusenet_nose_val_images.npy', nose_validation_images)
+numpy.save('numpy_validation_datasets/late_microexpfusenet_left_eye_val_labels.npy', left_eye_validation_labels)
+numpy.save('numpy_validation_datasets/late_microexpfusenet_right_eye_val_labels.npy', right_eye_validation_labels)
+numpy.save('numpy_validation_datasets/late_microexpfusenet_nose_val_labels.npy', nose_validation_labels)
 
 # Training the model
-history = model.fit([etrain_images, ntrain_images], etrain_labels, validation_data = ([etraining_set, ntraining_set], eye_traininglabels), callbacks=callbacks_list, batch_size = 16, nb_epoch = 250, shuffle=True)
+history = model.fit([left_eye_train_images,right_eye_train_images, nose_train_images], left_eye_train_labels, validation_data = ([left_eye_training_set,right_eye_training_set, nose_training_set], left_eye_train_labels), callbacks=callbacks_list, batch_size = 16, nb_epoch = 100, shuffle=True)
 
 # Loading Load validation set from numpy array
 """
