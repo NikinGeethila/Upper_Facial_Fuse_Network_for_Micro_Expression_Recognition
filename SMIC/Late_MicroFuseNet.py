@@ -67,24 +67,31 @@ for video in directorylisting:
            imagepath = videopath + "/" + framelisting[frame]
            image = cv2.imread(imagepath)
            landmarks = get_landmark(image)
-           if countimg<=1:
+           if countimg<1:
                img=annotate_landmarks(image, landmarks)
                imgplot = plt.imshow(img)
                plt.show()
-               countimg+=1
+
            numpylandmarks = numpy.asarray(landmarks)
-           eye_image = image[numpylandmarks[19][1]:numpylandmarks[1][1], numpylandmarks[1][0]:numpylandmarks[15][0]]
-           eye_image = cv2.resize(eye_image, (32, 32), interpolation = cv2.INTER_AREA)
-           eye_image = cv2.cvtColor(eye_image, cv2.COLOR_BGR2GRAY)
-           if countimg<=1:
-               img=annotate_landmarks(eye_image, landmarks)
+           up=min(numpylandmarks[17][1],numpylandmarks[18][1],numpylandmarks[19][1],numpylandmarks[20][1],numpylandmarks[21][1])-20
+           down = max(numpylandmarks[36][1], numpylandmarks[39][1], numpylandmarks[40][1], numpylandmarks[41][1]) +10
+           left = min(numpylandmarks[17][0], numpylandmarks[18][0], numpylandmarks[36][0])
+           right = max(numpylandmarks[39][0], numpylandmarks[21][0])+10
+           left_eye_image = image[up:down, left:right]
+
+           if countimg<1:
+               print(numpylandmarks[19][1],numpylandmarks[1][1])
+           if countimg<1:
+               img=annotate_landmarks(left_eye_image, landmarks)
                imgplot = plt.imshow(img)
                plt.show()
-               countimg+=1
+           left_eye_image = cv2.resize(left_eye_image, (32, 32), interpolation = cv2.INTER_AREA)
+           left_eye_image = cv2.cvtColor(left_eye_image, cv2.COLOR_BGR2GRAY)
+
            nose_mouth_image = image[numpylandmarks[2][1]:numpylandmarks[6][1], numpylandmarks[2][0]:numpylandmarks[14][0]]
            nose_mouth_image = cv2.resize(nose_mouth_image, (32, 32), interpolation = cv2.INTER_AREA)
            nose_mouth_image = cv2.cvtColor(nose_mouth_image, cv2.COLOR_BGR2GRAY)
-           if countimg<=1:
+           if countimg<1:
                img=annotate_landmarks(nose_mouth_image, landmarks)
                imgplot = plt.imshow(img)
                plt.show()
