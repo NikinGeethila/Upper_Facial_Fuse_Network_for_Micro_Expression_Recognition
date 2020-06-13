@@ -16,6 +16,8 @@ from keras.utils import np_utils, generic_utils
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
 from keras import backend as K
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 K.set_image_dim_ordering('th')
 
 # DLib Face Detection
@@ -53,6 +55,8 @@ eye_training_list = []
 nose_training_list = []
 
 directorylisting = os.listdir(negativepath)
+
+countimg = 0
 for video in directorylisting:
     videopath = negativepath + video
     eye_frames = []
@@ -63,13 +67,24 @@ for video in directorylisting:
            imagepath = videopath + "/" + framelisting[frame]
            image = cv2.imread(imagepath)
            landmarks = get_landmark(image)
+
            numpylandmarks = numpy.asarray(landmarks)
            eye_image = image[numpylandmarks[19][1]:numpylandmarks[1][1], numpylandmarks[1][0]:numpylandmarks[15][0]]
            eye_image = cv2.resize(eye_image, (32, 32), interpolation = cv2.INTER_AREA)
            eye_image = cv2.cvtColor(eye_image, cv2.COLOR_BGR2GRAY)
+           if countimg<=1:
+               img=annotate_landmarks(eye_image, landmarks)
+               imgplot = plt.imshow(img)
+               plt.show()
+               countimg+=1
            nose_mouth_image = image[numpylandmarks[2][1]:numpylandmarks[6][1], numpylandmarks[2][0]:numpylandmarks[14][0]]
            nose_mouth_image = cv2.resize(nose_mouth_image, (32, 32), interpolation = cv2.INTER_AREA)
            nose_mouth_image = cv2.cvtColor(nose_mouth_image, cv2.COLOR_BGR2GRAY)
+           if countimg<=1:
+               img=annotate_landmarks(nose_mouth_image, landmarks)
+               imgplot = plt.imshow(img)
+               plt.show()
+               countimg+=1
            eye_frames.append(eye_image)
            nose_mouth_frames.append(nose_mouth_image)
     eye_frames = numpy.asarray(eye_frames)
