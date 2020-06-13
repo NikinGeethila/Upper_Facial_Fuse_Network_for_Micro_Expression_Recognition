@@ -55,136 +55,82 @@ left_eye_training_list = []
 right_eye_training_list = []
 nose_training_list = []
 
-directorylisting = os.listdir(negativepath)
+for typepath in (negativepath,positivepath,surprisepath):
+    directorylisting = os.listdir(typepath)
 
-countimg = 0
-for video in directorylisting:
-    videopath = negativepath + video
-    left_eye_frames = []
-    right_eye_frames = []
-    nose_frames = []
-    framelisting = os.listdir(videopath)
-    framerange = [x for x in range(18)]
-    for frame in framerange:
-           imagepath = videopath + "/" + framelisting[frame]
-           image = cv2.imread(imagepath)
-           landmarks = get_landmark(image)
-           if countimg<1:
-               img=annotate_landmarks(image, landmarks)
-               imgplot = plt.imshow(img)
-               plt.show()
+    countimg = 0
+    for video in directorylisting:
+        videopath = typepath + video
+        left_eye_frames = []
+        right_eye_frames = []
+        nose_frames = []
+        framelisting = os.listdir(videopath)
+        framerange = [x for x in range(18)]
+        for frame in framerange:
+               imagepath = videopath + "/" + framelisting[frame]
+               image = cv2.imread(imagepath)
+               landmarks = get_landmark(image)
+               if countimg<1:
+                   img=annotate_landmarks(image, landmarks)
+                   imgplot = plt.imshow(img)
+                   plt.show()
 
-           numpylandmarks = numpy.asarray(landmarks)
-           up=min(numpylandmarks[17][1],numpylandmarks[18][1],numpylandmarks[19][1],numpylandmarks[20][1],numpylandmarks[21][1])-20
-           down = max(numpylandmarks[36][1], numpylandmarks[39][1], numpylandmarks[40][1], numpylandmarks[41][1]) +10
-           left = min(numpylandmarks[17][0], numpylandmarks[18][0], numpylandmarks[36][0])
-           right = max(numpylandmarks[39][0], numpylandmarks[21][0])+10
-           left_eye_image = image[up:down, left:right]
+               numpylandmarks = numpy.asarray(landmarks)
+               up=min(numpylandmarks[17][1],numpylandmarks[18][1],numpylandmarks[19][1],numpylandmarks[20][1],numpylandmarks[21][1])-20
+               down = max(numpylandmarks[36][1], numpylandmarks[39][1], numpylandmarks[40][1], numpylandmarks[41][1]) +10
+               left = min(numpylandmarks[17][0], numpylandmarks[18][0], numpylandmarks[36][0])
+               right = max(numpylandmarks[39][0], numpylandmarks[21][0])+10
+               left_eye_image = image[up:down, left:right]
 
 
 
-           left_eye_image = cv2.resize(left_eye_image, (32, 32), interpolation = cv2.INTER_AREA)
-           left_eye_image = cv2.cvtColor(left_eye_image, cv2.COLOR_BGR2GRAY)
-           if countimg<1:
-               img=annotate_landmarks(left_eye_image, landmarks)
-               imgplot = plt.imshow(img)
-               plt.show()
-           up = min(numpylandmarks[22][1], numpylandmarks[23][1], numpylandmarks[24][1], numpylandmarks[25][1],
-                    numpylandmarks[26][1]) - 20
-           down = max(numpylandmarks[42][1], numpylandmarks[47][1], numpylandmarks[46][1], numpylandmarks[45][1]) + 10
-           right = max(numpylandmarks[26][0], numpylandmarks[25][0], numpylandmarks[45][0])-10
-           left = min(numpylandmarks[22][0], numpylandmarks[42][0])
-           right_eye_image = image[up:down, left:right]
+               left_eye_image = cv2.resize(left_eye_image, (32, 32), interpolation = cv2.INTER_AREA)
+               left_eye_image = cv2.cvtColor(left_eye_image, cv2.COLOR_BGR2GRAY)
+               if countimg<1:
+                   img=annotate_landmarks(left_eye_image, landmarks)
+                   imgplot = plt.imshow(img)
+                   plt.show()
+               up = min(numpylandmarks[22][1], numpylandmarks[23][1], numpylandmarks[24][1], numpylandmarks[25][1],
+                        numpylandmarks[26][1]) - 20
+               down = max(numpylandmarks[42][1], numpylandmarks[47][1], numpylandmarks[46][1], numpylandmarks[45][1]) + 10
+               right = max(numpylandmarks[26][0], numpylandmarks[25][0], numpylandmarks[45][0])-10
+               left = min(numpylandmarks[22][0], numpylandmarks[42][0])
+               right_eye_image = image[up:down, left:right]
 
-           right_eye_image = cv2.resize(right_eye_image, (32, 32), interpolation=cv2.INTER_AREA)
-           right_eye_image = cv2.cvtColor(right_eye_image, cv2.COLOR_BGR2GRAY)
+               right_eye_image = cv2.resize(right_eye_image, (32, 32), interpolation=cv2.INTER_AREA)
+               right_eye_image = cv2.cvtColor(right_eye_image, cv2.COLOR_BGR2GRAY)
 
-           if countimg<1:
-               img=annotate_landmarks(right_eye_image, landmarks)
-               imgplot = plt.imshow(img)
-               plt.show()
-           up = numpylandmarks[27][1] - 5
-           down = max(numpylandmarks[31][1], numpylandmarks[32][1], numpylandmarks[33][1], numpylandmarks[34][1], numpylandmarks[35][1]) + 5
-           left = numpylandmarks[31][0]
-           right = numpylandmarks[35][0]
+               if countimg<1:
+                   img=annotate_landmarks(right_eye_image, landmarks)
+                   imgplot = plt.imshow(img)
+                   plt.show()
+               up = numpylandmarks[27][1] - 5
+               down = max(numpylandmarks[31][1], numpylandmarks[32][1], numpylandmarks[33][1], numpylandmarks[34][1], numpylandmarks[35][1]) + 5
+               left = numpylandmarks[31][0]
+               right = numpylandmarks[35][0]
 
-           nose_image = image[up:down, left:right]
+               nose_image = image[up:down, left:right]
 
-           nose_image = cv2.resize(nose_image, (32, 32), interpolation = cv2.INTER_AREA)
-           nose_image = cv2.cvtColor(nose_image, cv2.COLOR_BGR2GRAY)
-           if countimg<1:
-               img=annotate_landmarks(nose_image, landmarks)
-               imgplot = plt.imshow(img)
-               plt.show()
-               countimg+=1
-           left_eye_frames.append(left_eye_image)
-           right_eye_frames.append(right_eye_image)
-           nose_frames.append(nose_image)
-    left_eye_frames = numpy.asarray(left_eye_frames)
-    right_eye_frames = numpy.asarray(right_eye_frames)
-    nose_frames = numpy.asarray(nose_frames)
-    left_eye_videoarray = numpy.rollaxis(numpy.rollaxis(left_eye_frames, 2, 0), 2, 0)
-    right_eye_videoarray = numpy.rollaxis(numpy.rollaxis(right_eye_frames, 2, 0), 2, 0)
-    nose_videoarray = numpy.rollaxis(numpy.rollaxis(nose_frames, 2, 0), 2, 0)
-    left_eye_training_list.append(left_eye_videoarray)
-    right_eye_training_list.append(right_eye_videoarray)
-    nose_training_list.append(nose_videoarray)
+               nose_image = cv2.resize(nose_image, (32, 32), interpolation = cv2.INTER_AREA)
+               nose_image = cv2.cvtColor(nose_image, cv2.COLOR_BGR2GRAY)
+               if countimg<1:
+                   img=annotate_landmarks(nose_image, landmarks)
+                   imgplot = plt.imshow(img)
+                   plt.show()
+                   countimg+=1
+               left_eye_frames.append(left_eye_image)
+               right_eye_frames.append(right_eye_image)
+               nose_frames.append(nose_image)
+        left_eye_frames = numpy.asarray(left_eye_frames)
+        right_eye_frames = numpy.asarray(right_eye_frames)
+        nose_frames = numpy.asarray(nose_frames)
+        left_eye_videoarray = numpy.rollaxis(numpy.rollaxis(left_eye_frames, 2, 0), 2, 0)
+        right_eye_videoarray = numpy.rollaxis(numpy.rollaxis(right_eye_frames, 2, 0), 2, 0)
+        nose_videoarray = numpy.rollaxis(numpy.rollaxis(nose_frames, 2, 0), 2, 0)
+        left_eye_training_list.append(left_eye_videoarray)
+        right_eye_training_list.append(right_eye_videoarray)
+        nose_training_list.append(nose_videoarray)
 
-directorylisting = os.listdir(positivepath)
-for video in directorylisting:
-    videopath = positivepath + video
-    eye_frames = []
-    nose_mouth_frames = []
-    framelisting = os.listdir(videopath)
-    framerange = [x for x in range(18)]
-    for frame in framerange:
-           imagepath = videopath + "/" + framelisting[frame]
-           image = cv2.imread(imagepath)
-           landmarks = get_landmark(image)
-           numpylandmarks = numpy.asarray(landmarks)
-           eye_image = image[numpylandmarks[19][1]:numpylandmarks[1][1], numpylandmarks[1][0]:numpylandmarks[15][0]]
-           eye_image = cv2.resize(eye_image, (32, 32), interpolation = cv2.INTER_AREA)
-           eye_image = cv2.cvtColor(eye_image, cv2.COLOR_BGR2GRAY)
-           nose_mouth_image = image[numpylandmarks[2][1]:numpylandmarks[6][1], numpylandmarks[2][0]:numpylandmarks[14][0]]
-           nose_mouth_image = cv2.resize(nose_mouth_image, (32, 32), interpolation = cv2.INTER_AREA)
-           nose_mouth_image = cv2.cvtColor(nose_mouth_image, cv2.COLOR_BGR2GRAY)
-           eye_frames.append(eye_image)
-           nose_mouth_frames.append(nose_mouth_image)
-    eye_frames = numpy.asarray(eye_frames)
-    nose_mouth_frames = numpy.asarray(nose_mouth_frames)
-    eye_videoarray = numpy.rollaxis(numpy.rollaxis(eye_frames, 2, 0), 2, 0)
-    nose_mouth_videoarray = numpy.rollaxis(numpy.rollaxis(nose_mouth_frames, 2, 0), 2, 0)
-    eye_training_list.append(eye_videoarray)
-    nose_training_list.append(nose_mouth_videoarray)
-
-directorylisting = os.listdir(surprisepath)
-for video in directorylisting:
-    videopath = surprisepath + video
-    eye_frames = []
-    nose_mouth_frames = []
-    framelisting = os.listdir(videopath)
-    framerange = [x for x in range(18)]
-    for frame in framerange:
-           imagepath = videopath + "/" + framelisting[frame]
-           image = cv2.imread(imagepath)
-           landmarks = get_landmark(image)
-           numpylandmarks = numpy.asarray(landmarks)
-           eye_image = image[numpylandmarks[19][1]:numpylandmarks[1][1], numpylandmarks[1][0]:numpylandmarks[15][0]]
-           eye_image = cv2.resize(eye_image, (32, 32), interpolation = cv2.INTER_AREA)
-           eye_image = cv2.cvtColor(eye_image, cv2.COLOR_BGR2GRAY)
-           nose_mouth_image = image[numpylandmarks[2][1]:numpylandmarks[6][1], numpylandmarks[2][0]:numpylandmarks[14][0]]
-           nose_mouth_image = cv2.resize(nose_mouth_image, (32, 32), interpolation = cv2.INTER_AREA)
-           nose_mouth_image = cv2.cvtColor(nose_mouth_image, cv2.COLOR_BGR2GRAY)
-           eye_frames.append(eye_image)
-           nose_mouth_frames.append(nose_mouth_image)
-    eye_frames = numpy.asarray(eye_frames)
-    nose_mouth_frames = numpy.asarray(nose_mouth_frames)
-    eye_videoarray = numpy.rollaxis(numpy.rollaxis(eye_frames, 2, 0), 2, 0)
-    nose_mouth_videoarray = numpy.rollaxis(numpy.rollaxis(nose_mouth_frames, 2, 0), 2, 0)
-    eye_training_list.append(eye_videoarray)
-    nose_training_list.append(nose_mouth_videoarray)
-    eye_training_list.append(eye_videoarray)
-    nose_training_list.append(nose_mouth_videoarray)
 
 eye_training_list = numpy.asarray(eye_training_list)
 nose_training_list = numpy.asarray(nose_training_list)
