@@ -51,7 +51,8 @@ negativepath = '../../../Datasets/SIMC_E_categorical/Negative/'
 positivepath = '../../../Datasets/SIMC_E_categorical/Positive/'
 surprisepath = '../../../Datasets/SIMC_E_categorical/Surprise/'
 
-eye_training_list = []
+left_eye_training_list = []
+right_eye_training_list = []
 nose_training_list = []
 
 directorylisting = os.listdir(negativepath)
@@ -59,7 +60,8 @@ directorylisting = os.listdir(negativepath)
 countimg = 0
 for video in directorylisting:
     videopath = negativepath + video
-    eye_frames = []
+    left_eye_frames = []
+    right_eye_frames = []
     nose_mouth_frames = []
     framelisting = os.listdir(videopath)
     framerange = [x for x in range(18)]
@@ -79,15 +81,28 @@ for video in directorylisting:
            right = max(numpylandmarks[39][0], numpylandmarks[21][0])+10
            left_eye_image = image[up:down, left:right]
 
-           if countimg<1:
-               print(numpylandmarks[19][1],numpylandmarks[1][1])
+
+
+           left_eye_image = cv2.resize(left_eye_image, (32, 32), interpolation = cv2.INTER_AREA)
+           left_eye_image = cv2.cvtColor(left_eye_image, cv2.COLOR_BGR2GRAY)
            if countimg<1:
                img=annotate_landmarks(left_eye_image, landmarks)
                imgplot = plt.imshow(img)
                plt.show()
-           left_eye_image = cv2.resize(left_eye_image, (32, 32), interpolation = cv2.INTER_AREA)
-           left_eye_image = cv2.cvtColor(left_eye_image, cv2.COLOR_BGR2GRAY)
+           up = min(numpylandmarks[22][1], numpylandmarks[23][1], numpylandmarks[24][1], numpylandmarks[25][1],
+                    numpylandmarks[26][1]) - 20
+           down = max(numpylandmarks[42][1], numpylandmarks[47][1], numpylandmarks[46][1], numpylandmarks[45][1]) + 10
+           right = max(numpylandmarks[26][0], numpylandmarks[25][0], numpylandmarks[45][0])-10
+           left = min(numpylandmarks[22][0], numpylandmarks[42][0])
+           right_eye_image = image[up:down, left:right]
 
+           right_eye_image = cv2.resize(right_eye_image, (32, 32), interpolation=cv2.INTER_AREA)
+           right_eye_image = cv2.cvtColor(right_eye_image, cv2.COLOR_BGR2GRAY)
+
+           if countimg<1:
+               img=annotate_landmarks(right_eye_image, landmarks)
+               imgplot = plt.imshow(img)
+               plt.show()
            nose_mouth_image = image[numpylandmarks[2][1]:numpylandmarks[6][1], numpylandmarks[2][0]:numpylandmarks[14][0]]
            nose_mouth_image = cv2.resize(nose_mouth_image, (32, 32), interpolation = cv2.INTER_AREA)
            nose_mouth_image = cv2.cvtColor(nose_mouth_image, cv2.COLOR_BGR2GRAY)
@@ -96,13 +111,17 @@ for video in directorylisting:
                imgplot = plt.imshow(img)
                plt.show()
                countimg+=1
-           eye_frames.append(eye_image)
+           left_eye_frames.append(left_eye_image)
+           right_eye_frames.append(right_eye_image)
            nose_mouth_frames.append(nose_mouth_image)
-    eye_frames = numpy.asarray(eye_frames)
+    left_eye_frames = numpy.asarray(left_eye_frames)
+    right_eye_frames = numpy.asarray(right_eye_frames)
     nose_mouth_frames = numpy.asarray(nose_mouth_frames)
-    eye_videoarray = numpy.rollaxis(numpy.rollaxis(eye_frames, 2, 0), 2, 0)
+    left_eye_videoarray = numpy.rollaxis(numpy.rollaxis(left_eye_frames, 2, 0), 2, 0)
+    right_eye_videoarray = numpy.rollaxis(numpy.rollaxis(right_eye_frames, 2, 0), 2, 0)
     nose_mouth_videoarray = numpy.rollaxis(numpy.rollaxis(nose_mouth_frames, 2, 0), 2, 0)
-    eye_training_list.append(eye_videoarray)
+    left_eye_training_list.append(left_eye_videoarray)
+    right_eye_training_list.append(right_eye_videoarray)
     nose_training_list.append(nose_mouth_videoarray)
 
 directorylisting = os.listdir(positivepath)
