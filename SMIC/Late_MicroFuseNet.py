@@ -310,7 +310,7 @@ labels = numpy.load('numpy_validation_datasets/late_microexpfusenet_left_eye_val
 
 # Finding Confusion Matrix using pretrained weights
 
-predictions = model.predict([elimg])
+predictions = model.predict([elimg,erimg,nimg])
 predictions_labels = numpy.argmax(predictions, axis=1)
 validation_labels = numpy.argmax(labels, axis=1)
 cfm = confusion_matrix(validation_labels, predictions_labels)
