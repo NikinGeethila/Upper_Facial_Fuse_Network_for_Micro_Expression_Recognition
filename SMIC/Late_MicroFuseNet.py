@@ -26,31 +26,31 @@ predictor = dlib.shape_predictor(predictor_path)
 detector = dlib.get_frontal_face_detector()
 
 class TooManyFaces(Exception):
-	pass
+    pass
 
 class NoFaces(Exception):
-	pass
+    pass
 
 def get_landmark(img):
-	rects = detector(img, 1)
-	if len(rects) > 1:
-		pass
-	if len(rects) == 0:
-		pass
-	ans = numpy.matrix([[p.x, p.y] for p in predictor(img, rects[0]).parts()])
-	return ans
+    rects = detector(img, 1)
+    if len(rects) > 1:
+        pass
+    if len(rects) == 0:
+        pass
+    ans = numpy.matrix([[p.x, p.y] for p in predictor(img, rects[0]).parts()])
+    return ans
 
 def annotate_landmarks(img, landmarks, font_scale = 0.4):
-	for idx, point in enumerate(landmarks):
-		pos = (point[0, 0], point[0, 1])
-		cv2.putText(img, str(idx), pos, fontFace=cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, fontScale=font_scale, color=(0, 0, 255))
-		cv2.circle(img, pos, 3, color=(0, 255, 255))
-	return img
+    for idx, point in enumerate(landmarks):
+        pos = (point[0, 0], point[0, 1])
+        cv2.putText(img, str(idx), pos, fontFace=cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, fontScale=font_scale, color=(0, 0, 255))
+        cv2.circle(img, pos, 3, color=(0, 255, 255))
+    return img
 
 negativepath = '../../../Datasets/SIMC_E_categorical/Negative/'
 positivepath = '../../../Datasets/SIMC_E_categorical/Positive/'
 surprisepath = '../../../Datasets/SIMC_E_categorical/Surprise/'
-'''
+
 left_eye_training_list = []
 right_eye_training_list = []
 nose_training_list = []
@@ -80,9 +80,7 @@ for typepath in (negativepath,positivepath,surprisepath):
                down = max(numpylandmarks[36][1], numpylandmarks[39][1], numpylandmarks[40][1], numpylandmarks[41][1]) +10
                left = min(numpylandmarks[17][0], numpylandmarks[18][0], numpylandmarks[36][0])
                right = max(numpylandmarks[39][0], numpylandmarks[21][0])+10
-               left_eye_image = image[up:down, left:right]
-
-
+               left_eye_image = image[numpylandmarks[19][1]:numpylandmarks[1][1], numpylandmarks[1][0]:numpylandmarks[15][0]]
 
                left_eye_image = cv2.resize(left_eye_image, (32, 32), interpolation = cv2.INTER_AREA)
                left_eye_image = cv2.cvtColor(left_eye_image, cv2.COLOR_BGR2GRAY)
@@ -173,16 +171,25 @@ right_eye_training_set = numpy.zeros((right_eye_trainingsamples, 1, 32, 32, 18))
 nose_training_set = numpy.zeros((nose_trainingsamples, 1, 32, 32, 18))
 
 for h in range(left_eye_trainingsamples):
-	left_eye_training_set[h][0][:][:][:] = left_eye_training_frames[h,:,:,:]
+    left_eye_training_set[h][0][:][:][:] = left_eye_training_frames[h,:,:,:]
 for h in range(right_eye_trainingsamples):
-	right_eye_training_set[h][0][:][:][:] = right_eye_training_frames[h,:,:,:]
+    right_eye_training_set[h][0][:][:][:] = right_eye_training_frames[h,:,:,:]
 for h in range(nose_trainingsamples):
     nose_training_set[h][0][:][:][:] = nose_training_frames[h, :, :, :]
 
-for training_set in (left_eye_training_set,right_eye_training_set,nose_training_set):
-    training_set = training_set.astype('float32')
-    training_set -= numpy.mean(training_set)
-    training_set /= numpy.max(training_set)
+left_eye_training_set = left_eye_training_set.astype('float32')
+left_eye_training_set -= numpy.mean(left_eye_training_set)
+left_eye_training_set /= numpy.max(left_eye_training_set)
+
+right_eye_training_set = right_eye_training_set.astype('float32')
+right_eye_training_set -= numpy.mean(right_eye_training_set)
+right_eye_training_set /= numpy.max(right_eye_training_set)
+
+nose_training_set = nose_training_set.astype('float32')
+nose_training_set -= numpy.mean(nose_training_set)
+nose_training_set /= numpy.max(nose_training_set)
+
+
 
 
 numpy.save('numpy_training_datasets/late_microexpfusenetlefteyeimages.npy', left_eye_training_set)
@@ -204,6 +211,7 @@ nose_training_set = numpy.load('numpy_training_datasets/late_microexpfusenetnose
 left_eye_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetlefteyelabels.npy')
 right_eye_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetrighteyelabels.npy')
 nose_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetnoselabels.npy')
+'''
 print(len(left_eye_training_labels))
 print(len(right_eye_training_labels))
 print(len(nose_training_labels))
