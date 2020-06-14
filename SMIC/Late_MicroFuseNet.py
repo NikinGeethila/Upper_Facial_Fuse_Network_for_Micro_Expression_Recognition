@@ -50,7 +50,7 @@ def annotate_landmarks(img, landmarks, font_scale = 0.4):
 negativepath = '../../../Datasets/SIMC_E_categorical/Negative/'
 positivepath = '../../../Datasets/SIMC_E_categorical/Positive/'
 surprisepath = '../../../Datasets/SIMC_E_categorical/Surprise/'
-
+'''
 left_eye_training_list = []
 right_eye_training_list = []
 nose_training_list = []
@@ -204,8 +204,9 @@ nose_training_set = numpy.load('numpy_training_datasets/late_microexpfusenetnose
 left_eye_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetlefteyelabels.npy')
 right_eye_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetrighteyelabels.npy')
 nose_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetnoselabels.npy')
-'''
-
+print(len(left_eye_training_labels))
+print(len(right_eye_training_labels))
+print(len(nose_training_labels))
 # Late MicroExpFuseNet Model
 left_eye_input = Input(shape = (1, 32, 32, 18))
 left_eye_conv = Convolution3D(32, (3, 3, 15))(left_eye_input)
@@ -216,8 +217,8 @@ dropout_1 = Dropout(0.5)(ract_2)
 flatten_1 = Flatten()(dropout_1)
 dense_1 = Dense(1024, )(flatten_1)
 dropout_2 = Dropout(0.5)(dense_1)
-dense_2= Dense(128, )(dropout_2)
-dropout_3 = Dropout(0.5)(dense_2)
+#dense_2= Dense(128, )(dropout_2)
+#dropout_3 = Dropout(0.5)(dense_2)
 
 right_eye_input = Input(shape = (1, 32, 32, 18))
 right_eye_conv = Convolution3D(32, (3, 3, 15))(right_eye_input)
@@ -228,8 +229,8 @@ dropout_4 = Dropout(0.5)(ract_4)
 flatten_2 = Flatten()(dropout_4)
 dense_3 = Dense(1024, )(flatten_2)
 dropout_5 = Dropout(0.5)(dense_3)
-dense_4= Dense(128, )(dropout_5)
-dropout_6= Dropout(0.5)(dense_4)
+#dense_4= Dense(128, )(dropout_5)
+#dropout_6= Dropout(0.5)(dense_4)
 
 nose_input = Input(shape = (1, 32, 32, 18))
 nose_conv = Convolution3D(32, (3, 3, 15))(nose_input)
@@ -240,10 +241,10 @@ dropout_7 = Dropout(0.5)(ract_6)
 flatten_3 = Flatten()(dropout_7)
 dense_5= Dense(1024, )(flatten_3)
 dropout_8 = Dropout(0.5)(dense_5)
-dense_6 = Dense(128, )(dropout_8)
-dropout_9 = Dropout(0.5)(dense_6)
+#dense_6 = Dense(128, )(dropout_8)
+#dropout_9 = Dropout(0.5)(dense_6)
 
-concat = Concatenate(axis = 1)([dropout_3, dropout_6,dropout_9])
+concat = Concatenate(axis = 1)([dropout_2, dropout_5,dropout_8])
 
 dense_7 = Dense(3, )(concat)
 activation = Activation('softmax')(dense_7)
@@ -285,7 +286,7 @@ numpy.save('numpy_validation_datasets/late_microexpfusenet_right_eye_val_labels.
 numpy.save('numpy_validation_datasets/late_microexpfusenet_nose_val_labels.npy', nose_validation_labels)
 
 # Training the model
-history = model.fit([left_eye_train_images,right_eye_train_images, nose_train_images], left_eye_train_labels, validation_data = ([left_eye_training_set,right_eye_training_set, nose_training_set], left_eye_training_labels), callbacks=callbacks_list, batch_size = 16, nb_epoch = 100, shuffle=True)
+history = model.fit([left_eye_train_images,right_eye_train_images, nose_train_images], left_eye_train_labels, validation_data = ([left_eye_validation_images,right_eye_validation_images, nose_validation_images], left_eye_validation_labels), callbacks=callbacks_list, batch_size = 16, nb_epoch = 100, shuffle=True)
 
 # Loading Load validation set from numpy array
 
