@@ -270,15 +270,11 @@ callbacks_list = [checkpoint]
 
 model.summary()
 
-# Load pre-trained weights
-"""
-model.load_weights('weights_late_microexpfusenet/weights-improvement-22-0.83.hdf5')
-"""
 
 # Spliting the dataset into training and validation sets
-left_eye_train_images, left_eye_validation_images, left_eye_train_labels, left_eye_validation_labels =  train_test_split(left_eye_training_set, left_eye_training_labels, test_size=0.2, shuffle=True)
-right_eye_train_images, right_eye_validation_images, right_eye_train_labels, right_eye_validation_labels =  train_test_split(right_eye_training_set, right_eye_training_labels, test_size=0.2, shuffle=True)
-nose_train_images, nose_validation_images, nose_train_labels, nose_validation_labels =  train_test_split(nose_training_set, nose_training_labels, test_size=0.2, shuffle=True)
+left_eye_train_images, left_eye_validation_images, left_eye_train_labels, left_eye_validation_labels =  train_test_split(left_eye_training_set, left_eye_training_labels, test_size=0.2, random_state=42)
+right_eye_train_images, right_eye_validation_images, right_eye_train_labels, right_eye_validation_labels =  train_test_split(right_eye_training_set, right_eye_training_labels, test_size=0.2, random_state=42)
+nose_train_images, nose_validation_images, nose_train_labels, nose_validation_labels =  train_test_split(nose_training_set, nose_training_labels, test_size=0.2, random_state=42)
 print(len(left_eye_train_images))
 print(len(left_eye_train_labels))
 print(len(left_eye_validation_images))
