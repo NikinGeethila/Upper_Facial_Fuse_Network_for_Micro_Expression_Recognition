@@ -93,8 +93,8 @@ for typepath in (negativepath,positivepath,surprisepath):
                up = min(numpylandmarks[22][1], numpylandmarks[23][1], numpylandmarks[24][1], numpylandmarks[25][1],
                         numpylandmarks[26][1]) - 20
                down = max(numpylandmarks[42][1], numpylandmarks[47][1], numpylandmarks[46][1], numpylandmarks[45][1]) + 10
-               right = max(numpylandmarks[26][0], numpylandmarks[25][0], numpylandmarks[45][0])-10
-               left = min(numpylandmarks[22][0], numpylandmarks[42][0])
+               right = max(numpylandmarks[26][0], numpylandmarks[25][0], numpylandmarks[45][0])
+               left = min(numpylandmarks[22][0], numpylandmarks[42][0])-10
                right_eye_image = image[up:down, left:right]
 
                right_eye_image = cv2.resize(right_eye_image, (32, 32), interpolation=cv2.INTER_AREA)
@@ -217,39 +217,39 @@ dropout_1 = Dropout(0.5)(ract_2)
 flatten_1 = Flatten()(dropout_1)
 dense_1 = Dense(1024, )(flatten_1)
 dropout_2 = Dropout(0.5)(dense_1)
-#dense_2= Dense(128, )(dropout_2)
-#dropout_3 = Dropout(0.5)(dense_2)
+dense_2= Dense(128, )(dropout_2)
+dropout_3 = Dropout(0.5)(dense_2)
 
-right_eye_input = Input(shape = (1, 32, 32, 18))
-right_eye_conv = Convolution3D(32, (3, 3, 15))(right_eye_input)
-ract_3 = Activation('relu')(right_eye_conv)
-maxpool_2 = MaxPooling3D(pool_size=(3, 3, 3))(ract_3)
-ract_4 = Activation('relu')(maxpool_2)
-dropout_4 = Dropout(0.5)(ract_4)
-flatten_2 = Flatten()(dropout_4)
-dense_3 = Dense(1024, )(flatten_2)
-dropout_5 = Dropout(0.5)(dense_3)
-#dense_4= Dense(128, )(dropout_5)
-#dropout_6= Dropout(0.5)(dense_4)
+# right_eye_input = Input(shape = (1, 32, 32, 18))
+# right_eye_conv = Convolution3D(32, (3, 3, 15))(right_eye_input)
+# ract_3 = Activation('relu')(right_eye_conv)
+# maxpool_2 = MaxPooling3D(pool_size=(3, 3, 3))(ract_3)
+# ract_4 = Activation('relu')(maxpool_2)
+# dropout_4 = Dropout(0.5)(ract_4)
+# flatten_2 = Flatten()(dropout_4)
+# dense_3 = Dense(1024, )(flatten_2)
+# dropout_5 = Dropout(0.5)(dense_3)
+# #dense_4= Dense(128, )(dropout_5)
+# #dropout_6= Dropout(0.5)(dense_4)
+#
+# nose_input = Input(shape = (1, 32, 32, 18))
+# nose_conv = Convolution3D(32, (3, 3, 15))(nose_input)
+# ract_5 = Activation('relu')(nose_conv)
+# maxpool_3 = MaxPooling3D(pool_size=(3, 3, 3))(ract_5)
+# ract_6 = Activation('relu')(maxpool_3)
+# dropout_7 = Dropout(0.5)(ract_6)
+# flatten_3 = Flatten()(dropout_7)
+# dense_5= Dense(1024, )(flatten_3)
+# dropout_8 = Dropout(0.5)(dense_5)
+# #dense_6 = Dense(128, )(dropout_8)
+# #dropout_9 = Dropout(0.5)(dense_6)
+#
+# concat = Concatenate(axis = 1)([dropout_2, dropout_5,dropout_8])
 
-nose_input = Input(shape = (1, 32, 32, 18))
-nose_conv = Convolution3D(32, (3, 3, 15))(nose_input)
-ract_5 = Activation('relu')(nose_conv)
-maxpool_3 = MaxPooling3D(pool_size=(3, 3, 3))(ract_5)
-ract_6 = Activation('relu')(maxpool_3)
-dropout_7 = Dropout(0.5)(ract_6)
-flatten_3 = Flatten()(dropout_7)
-dense_5= Dense(1024, )(flatten_3)
-dropout_8 = Dropout(0.5)(dense_5)
-#dense_6 = Dense(128, )(dropout_8)
-#dropout_9 = Dropout(0.5)(dense_6)
-
-concat = Concatenate(axis = 1)([dropout_2, dropout_5,dropout_8])
-
-dense_7 = Dense(3, )(concat)
+dense_7 = Dense(3, )(dropout_3)
 activation = Activation('softmax')(dense_7)
 
-model = Model(inputs = [left_eye_input,right_eye_input, nose_input], outputs = activation)
+model = Model(inputs = [left_eye_input], outputs = activation)
 model.compile(loss = 'categorical_crossentropy', optimizer = 'SGD', metrics = ['accuracy'])
 
 filepath="weights_late_microexpfusenet/weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
@@ -286,7 +286,7 @@ numpy.save('numpy_validation_datasets/late_microexpfusenet_right_eye_val_labels.
 numpy.save('numpy_validation_datasets/late_microexpfusenet_nose_val_labels.npy', nose_validation_labels)
 
 # Training the model
-history = model.fit([left_eye_train_images,right_eye_train_images, nose_train_images], left_eye_train_labels, validation_data = ([left_eye_validation_images,right_eye_validation_images, nose_validation_images], left_eye_validation_labels), callbacks=callbacks_list, batch_size = 16, nb_epoch = 100, shuffle=True)
+history = model.fit([left_eye_train_images], left_eye_train_labels, validation_data = ([left_eye_validation_images], left_eye_validation_labels), callbacks=callbacks_list, batch_size = 16, nb_epoch = 100, shuffle=True)
 
 # Loading Load validation set from numpy array
 
