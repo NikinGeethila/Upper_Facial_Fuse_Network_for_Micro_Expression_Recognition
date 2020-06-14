@@ -46,7 +46,7 @@ def annotate_landmarks(img, landmarks, font_scale = 0.4):
 		cv2.putText(img, str(idx), pos, fontFace=cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, fontScale=font_scale, color=(0, 0, 255))
 		cv2.circle(img, pos, 3, color=(0, 255, 255))
 	return img
-'''
+
 negativepath = '../../../Datasets/SIMC_E_categorical/Negative/'
 positivepath = '../../../Datasets/SIMC_E_categorical/Positive/'
 surprisepath = '../../../Datasets/SIMC_E_categorical/Surprise/'
@@ -57,7 +57,7 @@ nose_training_list = []
 
 for typepath in (negativepath,positivepath,surprisepath):
     directorylisting = os.listdir(typepath)
-
+    print(typepath)
     countimg = 0
     for video in directorylisting:
         videopath = typepath + video
@@ -204,7 +204,7 @@ nose_training_set = numpy.load('numpy_training_datasets/late_microexpfusenetnose
 left_eye_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetlefteyelabels.npy')
 right_eye_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetrighteyelabels.npy')
 nose_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetnoselabels.npy')
-
+'''
 
 # Late MicroExpFuseNet Model
 left_eye_input = Input(shape = (1, 32, 32, 18))
