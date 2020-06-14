@@ -128,6 +128,10 @@ for typepath in (negativepath,positivepath,surprisepath):
         left_eye_training_list.append(left_eye_videoarray)
         right_eye_training_list.append(right_eye_videoarray)
         nose_training_list.append(nose_videoarray)
+        if typepath==surprisepath:
+            left_eye_training_list.append(left_eye_videoarray)
+            right_eye_training_list.append(right_eye_videoarray)
+            nose_training_list.append(nose_videoarray)
 
 
 left_eye_training_list = numpy.asarray(left_eye_training_list)
