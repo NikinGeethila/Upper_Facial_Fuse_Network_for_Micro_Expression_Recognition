@@ -15,12 +15,11 @@ from keras.callbacks import ModelCheckpoint
 from keras.utils import np_utils, generic_utils
 from sklearn.model_selection import train_test_split
 from sklearn import preprocessing
-from keras.layers import LeakyReLU
 from keras import backend as K
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 K.set_image_dim_ordering('th')
-'''
+
 # DLib Face Detection
 predictor_path = "shape_predictor_68_face_landmarks.dat"
 predictor = dlib.shape_predictor(predictor_path)
@@ -216,14 +215,14 @@ nose_training_set = numpy.load('numpy_training_datasets/late_microexpfusenetnose
 left_eye_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetlefteyelabels.npy')
 right_eye_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetrighteyelabels.npy')
 nose_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetnoselabels.npy')
-
+'''
 print(len(left_eye_training_labels))
 print(len(right_eye_training_labels))
 print(len(nose_training_labels))
 # Late MicroExpFuseNet Model
 left_eye_input = Input(shape = (1, 32, 32, 18))
 left_eye_conv = Convolution3D(32, (3, 3, 15))(left_eye_input)
-ract_1 = LeakyReLU()(left_eye_conv)
+ract_1 = Activation('relu')(left_eye_conv)
 maxpool_1 = MaxPooling3D(pool_size=(3, 3, 3))(ract_1)
 ract_2 = Activation('relu')(maxpool_1)
 dropout_1 = Dropout(0.5)(ract_2)
@@ -235,7 +234,7 @@ dropout_3 = Dropout(0.5)(dense_2)
 
 right_eye_input = Input(shape = (1, 32, 32, 18))
 right_eye_conv = Convolution3D(32, (3, 3, 15))(right_eye_input)
-ract_3 = LeakyReLU()(right_eye_conv)
+ract_3 = Activation('relu')(right_eye_conv)
 maxpool_2 = MaxPooling3D(pool_size=(3, 3, 3))(ract_3)
 ract_4 = Activation('relu')(maxpool_2)
 dropout_4 = Dropout(0.5)(ract_4)
@@ -247,7 +246,7 @@ dropout_6= Dropout(0.5)(dense_4)
 
 nose_input = Input(shape = (1, 32, 32, 18))
 nose_conv = Convolution3D(32, (3, 3, 15))(nose_input)
-ract_5 = LeakyReLU()(nose_conv)
+ract_5 = Activation('relu')(nose_conv)
 maxpool_3 = MaxPooling3D(pool_size=(3, 3, 3))(ract_5)
 ract_6 = Activation('relu')(maxpool_3)
 dropout_7 = Dropout(0.5)(ract_6)
@@ -262,7 +261,8 @@ dropout_9 = Dropout(0.5)(dense_6)
 
 concat = Concatenate(axis = 1)([dropout_3, dropout_6,dropout_9])
 dense_7 = Dense(3, )(concat)
-activation = Activation('softmax')(dense_7)
+dropout_10 = Dropout(0.5)(dense_7)
+activation = Activation('softmax')(dropout_10)
 
 model = Model(inputs = [left_eye_input,right_eye_input,nose_input], outputs = activation)
 model.compile(loss = 'categorical_crossentropy', optimizer = 'SGD', metrics = ['accuracy'])
