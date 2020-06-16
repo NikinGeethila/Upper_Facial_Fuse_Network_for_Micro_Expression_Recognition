@@ -19,5 +19,6 @@ activation = Activation('softmax')(dropout_10)
 -(32*32)(left eye, right eye, nose)(100)(16)
 	-relu 
 		acc=23
-
+	-LeakyRelu(0.3)
+		acc=23
 		
