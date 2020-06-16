@@ -5,12 +5,14 @@ import dlib
 import numpy
 import imageio
 from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score
 from keras.models import Sequential, Model
 from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Convolution3D, MaxPooling3D
 from keras.utils import multi_gpu_model
 from keras.optimizers import SGD, RMSprop
 from keras.layers import Concatenate, Input, concatenate, add, multiply, maximum
+from keras.layers import LeakyReLU
 from keras.callbacks import ModelCheckpoint
 from keras.utils import np_utils, generic_utils
 from sklearn.model_selection import train_test_split
@@ -18,13 +20,14 @@ from sklearn import preprocessing
 from keras import backend as K
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+import timeit
 K.set_image_dim_ordering('th')
 
 # DLib Face Detection
 predictor_path = "shape_predictor_68_face_landmarks.dat"
 predictor = dlib.shape_predictor(predictor_path)
 detector = dlib.get_frontal_face_detector()
-
+'''
 class TooManyFaces(Exception):
     pass
 
@@ -215,16 +218,16 @@ nose_training_set = numpy.load('numpy_training_datasets/late_microexpfusenetnose
 left_eye_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetlefteyelabels.npy')
 right_eye_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetrighteyelabels.npy')
 nose_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetnoselabels.npy')
-'''
+
 print(len(left_eye_training_labels))
 print(len(right_eye_training_labels))
 print(len(nose_training_labels))
 # Late MicroExpFuseNet Model
 left_eye_input = Input(shape = (1, 32, 32, 18))
 left_eye_conv = Convolution3D(32, (3, 3, 15))(left_eye_input)
-ract_1 = Activation('relu')(left_eye_conv)
+ract_1 = LeakyReLU(a=0.3)(left_eye_conv)
 maxpool_1 = MaxPooling3D(pool_size=(3, 3, 3))(ract_1)
-ract_2 = Activation('relu')(maxpool_1)
+ract_2 = LeakyReLU(a=0.3)(maxpool_1)
 dropout_1 = Dropout(0.5)(ract_2)
 flatten_1 = Flatten()(dropout_1)
 dense_1 = Dense(1024, )(flatten_1)
@@ -234,9 +237,9 @@ dropout_3 = Dropout(0.5)(dense_2)
 
 right_eye_input = Input(shape = (1, 32, 32, 18))
 right_eye_conv = Convolution3D(32, (3, 3, 15))(right_eye_input)
-ract_3 = Activation('relu')(right_eye_conv)
+ract_3 = LeakyReLU(a=0.3)(right_eye_conv)
 maxpool_2 = MaxPooling3D(pool_size=(3, 3, 3))(ract_3)
-ract_4 = Activation('relu')(maxpool_2)
+ract_4 = LeakyReLU(a=0.3)(maxpool_2)
 dropout_4 = Dropout(0.5)(ract_4)
 flatten_2 = Flatten()(dropout_4)
 dense_3 = Dense(1024, )(flatten_2)
@@ -246,9 +249,9 @@ dropout_6= Dropout(0.5)(dense_4)
 
 nose_input = Input(shape = (1, 32, 32, 18))
 nose_conv = Convolution3D(32, (3, 3, 15))(nose_input)
-ract_5 = Activation('relu')(nose_conv)
+ract_5 = LeakyReLU(a=0.3)(nose_conv)
 maxpool_3 = MaxPooling3D(pool_size=(3, 3, 3))(ract_5)
-ract_6 = Activation('relu')(maxpool_3)
+ract_6 = LeakyReLU(a=0.3)(maxpool_3)
 dropout_7 = Dropout(0.5)(ract_6)
 flatten_3 = Flatten()(dropout_7)
 dense_5= Dense(1024, )(flatten_3)
@@ -256,8 +259,6 @@ dropout_8 = Dropout(0.5)(dense_5)
 dense_6 = Dense(128, )(dropout_8)
 dropout_9 = Dropout(0.5)(dense_6)
 
-#24
-#22
 
 concat = Concatenate(axis = 1)([dropout_3, dropout_6,dropout_9])
 dense_7 = Dense(3, )(concat)
@@ -297,8 +298,9 @@ numpy.save('numpy_validation_datasets/late_microexpfusenet_right_eye_val_labels.
 numpy.save('numpy_validation_datasets/late_microexpfusenet_nose_val_labels.npy', nose_validation_labels)
 
 # Training the model
+start = timeit.timeit()
 history = model.fit([left_eye_train_images,right_eye_train_images,nose_train_images], left_eye_train_labels, validation_data = ([left_eye_training_set,right_eye_training_set,nose_training_set], left_eye_training_labels), callbacks=callbacks_list, batch_size = 16, nb_epoch = 100, shuffle=True)
-
+end = timeit.timeit()
 # Loading Load validation set from numpy array
 
 elimg = numpy.load('numpy_validation_datasets/late_microexpfusenet_left_eye_val_images.npy')
@@ -314,4 +316,6 @@ predictions_labels = numpy.argmax(predictions, axis=1)
 validation_labels = numpy.argmax(labels, axis=1)
 cfm = confusion_matrix(validation_labels, predictions_labels)
 print (cfm)
-
+print("accuracy: ",accuracy_score(validation_labels, predictions_labels))
+print("time: ")
+print(end-start)
