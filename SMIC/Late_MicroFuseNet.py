@@ -82,17 +82,19 @@ def evaluate(segment_train_images, segment_validation_images, segment_train_labe
 
 
 K.set_image_dim_ordering('th')
-
+SegmentNameOne='LeftEye'
+SegmentNameTwo='RightEye'
+SegmentNameThree='Nose'
 
 # Load training images and labels that are stored in numpy array
 
-left_eye_training_set = numpy.load('numpy_training_datasets/late_microexpfusenetlefteyeimages.npy')
-right_eye_training_set = numpy.load('numpy_training_datasets/late_microexpfusenetrighteyeimages.npy')
-nose_training_set = numpy.load('numpy_training_datasets/late_microexpfusenetnoseimages.npy')
+left_eye_training_set = numpy.load('numpy_training_datasets/{0}_images.npy'.format(SegmentNameOne))
+right_eye_training_set = numpy.load('numpy_training_datasets/{0}_images.npy'.format(SegmentNameTwo))
+nose_training_set = numpy.load('numpy_training_datasets/{0}_images.npy'.format(SegmentNameThree))
 
-left_eye_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetlefteyelabels.npy')
-right_eye_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetrighteyelabels.npy')
-nose_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetnoselabels.npy')
+left_eye_training_labels = numpy.load('numpy_training_datasets/{0}_labels.npy'.format(SegmentNameOne))
+right_eye_training_labels = numpy.load('numpy_training_datasets/{0}_labels.npy'.format(SegmentNameTwo))
+nose_training_labels = numpy.load('numpy_training_datasets/{0}_labels.npy'.format(SegmentNameThree))
 
 
 
@@ -133,22 +135,22 @@ nose_train_images, nose_validation_images, nose_train_labels, nose_validation_la
 
 
 # Save validation set in a numpy array
-numpy.save('numpy_validation_datasets/late_microexpfusenet_left_eye_val_images.npy', left_eye_validation_images)
-numpy.save('numpy_validation_datasets/late_microexpfusenet_right_eye_val_images.npy', right_eye_validation_images)
-numpy.save('numpy_validation_datasets/late_microexpfusenet_nose_val_images.npy', nose_validation_images)
+numpy.save('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameOne), left_eye_validation_images)
+numpy.save('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameTwo), right_eye_validation_images)
+numpy.save('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameThree), nose_validation_images)
 
-numpy.save('numpy_validation_datasets/late_microexpfusenet_left_eye_val_labels.npy', left_eye_validation_labels)
-numpy.save('numpy_validation_datasets/late_microexpfusenet_right_eye_val_labels.npy', right_eye_validation_labels)
-numpy.save('numpy_validation_datasets/late_microexpfusenet_nose_val_labels.npy', nose_validation_labels)
+numpy.save('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameOne), left_eye_validation_labels)
+numpy.save('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameTwo), right_eye_validation_labels)
+numpy.save('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameThree), nose_validation_labels)
 
 
 
 # Loading Load validation set from numpy array
 
-# elimg = numpy.load('numpy_validation_datasets/late_microexpfusenet_left_eye_val_images.npy')
-# erimg = numpy.load('numpy_validation_datasets/late_microexpfusenet_right_eye_val_images.npy')
-# nimg = numpy.load('numpy_validation_datasets/late_microexpfusenet_nose_val_images.npy')
-# labels = numpy.load('numpy_validation_datasets/late_microexpfusenet_left_eye_val_labels.npy')
+# elimg = numpy.load('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameOne))
+# erimg = numpy.load('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameTwo))
+# nimg = numpy.load('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameThree))
+# labels = numpy.load('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameOne))
 
 evaluate(segment_train_images, segment_validation_images,segment_train_labels, segment_validation_labels ,0)
 
