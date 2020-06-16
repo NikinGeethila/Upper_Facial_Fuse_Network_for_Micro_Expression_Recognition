@@ -12,7 +12,7 @@ from keras.layers.convolutional import Convolution3D, MaxPooling3D
 from keras.utils import multi_gpu_model
 from keras.optimizers import SGD, RMSprop
 from keras.layers import Concatenate, Input, concatenate, add, multiply, maximum
-from keras.layers import LeakyReLU
+from keras.layers import LeakyReLU,PReLU
 from keras.callbacks import ModelCheckpoint
 from keras.utils import np_utils, generic_utils
 from sklearn.model_selection import train_test_split
@@ -225,9 +225,9 @@ print(len(nose_training_labels))
 # Late MicroExpFuseNet Model
 left_eye_input = Input(shape = (1, 32, 32, 18))
 left_eye_conv = Convolution3D(32, (3, 3, 15))(left_eye_input)
-ract_1 = Activation("relu")(left_eye_conv)
+ract_1 = PReLU(alpha_initializer="zeros")(left_eye_conv)
 maxpool_1 = MaxPooling3D(pool_size=(3, 3, 3))(ract_1)
-ract_2 =LeakyReLU(alpha=0.01) (maxpool_1)
+ract_2 =PReLU(alpha_initializer="zeros") (maxpool_1)
 dropout_1 = Dropout(0.5)(ract_2)
 flatten_1 = Flatten()(dropout_1)
 dense_1 = Dense(1024, )(flatten_1)
@@ -237,9 +237,9 @@ dropout_3 = Dropout(0.5)(dense_2)
 
 right_eye_input = Input(shape = (1, 32, 32, 18))
 right_eye_conv = Convolution3D(32, (3, 3, 15))(right_eye_input)
-ract_3 = Activation("relu")(right_eye_conv)
+ract_3 = PReLU(alpha_initializer="zeros")(right_eye_conv)
 maxpool_2 = MaxPooling3D(pool_size=(3, 3, 3))(ract_3)
-ract_4 = LeakyReLU(alpha=0.01)(maxpool_2)
+ract_4 = PReLU(alpha_initializer="zeros")(maxpool_2)
 dropout_4 = Dropout(0.5)(ract_4)
 flatten_2 = Flatten()(dropout_4)
 dense_3 = Dense(1024, )(flatten_2)
@@ -249,9 +249,9 @@ dropout_6= Dropout(0.5)(dense_4)
 
 nose_input = Input(shape = (1, 32, 32, 18))
 nose_conv = Convolution3D(32, (3, 3, 15))(nose_input)
-ract_5 = Activation("relu")(nose_conv)
+ract_5 = PReLU(alpha_initializer="zeros")(nose_conv)
 maxpool_3 = MaxPooling3D(pool_size=(3, 3, 3))(ract_5)
-ract_6 = LeakyReLU(alpha=0.01)(maxpool_3)
+ract_6 = PReLU(alpha_initializer="zeros")(maxpool_3)
 dropout_7 = Dropout(0.5)(ract_6)
 flatten_3 = Flatten()(dropout_7)
 dense_5= Dense(1024, )(flatten_3)

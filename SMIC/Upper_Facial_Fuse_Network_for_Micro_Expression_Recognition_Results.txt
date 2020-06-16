@@ -25,4 +25,6 @@ activation = Activation('softmax')(dropout_10)
 		acc=23
 	-LeakyRelu(0.01)-relu
 		acc=23
+	-relu-LeakyRelu(0.01)
+		acc=24
 		
