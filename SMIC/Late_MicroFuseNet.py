@@ -12,7 +12,7 @@ from keras import backend as K
 import timeit
 
 
-def evaluate(segment_train_images, segment_validation_images, segment_train_labels, segment_validation_labels,test_index ):
+def evaluate(SegmentOne_train_images,SegmentTwo_train_images,SegmentThree_train_images, SegmentOne_validation_images,SegmentTwo_validation_images, SegmentThree_validation_images,SegmentOne_train_labels,SegmentOne_validation_labels ,test_index ):
     # Fusion Model
     SegmentOne_input = Input(shape=(1, 32, 32, 18))
     SegmentOne_conv = Convolution3D(32, (3, 3, 15))(SegmentOne_input)
@@ -71,9 +71,9 @@ def evaluate(segment_train_images, segment_validation_images, segment_train_labe
 
     # Finding Confusion Matrix using pretrained weights
 
-    predictions = model.predict([elimg,erimg,nimg])
+    predictions = model.predict([SegmentOne_validation_images,SegmentTwo_validation_images,SegmentThree_validation_images])
     predictions_labels = numpy.argmax(predictions, axis=1)
-    validation_labels = numpy.argmax(labels, axis=1)
+    validation_labels = numpy.argmax(SegmentOne_validation_labels, axis=1)
     cfm = confusion_matrix(validation_labels, predictions_labels)
     print (cfm)
     print("accuracy: ",accuracy_score(validation_labels, predictions_labels))
@@ -149,11 +149,11 @@ numpy.save('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameThree), 
 
 # Loading Load validation set from numpy array
 
-# elimg = numpy.load('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameOne))
-# erimg = numpy.load('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameTwo))
-# nimg = numpy.load('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameThree))
-# labels = numpy.load('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameOne))
+# SegmentOne_validation_images = numpy.load('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameOne))
+# SegmentTwo_validation_images = numpy.load('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameTwo))
+# SegmentThree_validation_images = numpy.load('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameThree))
+# SegmentOne_validation_labels = numpy.load('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameOne))
 
-evaluate(SegmentOne_train_images,SegmentTwo_train_images,SegmentThree_train_images SegmentOne_validation_images,SegmentTwo_validation_images, SegmentThree_validation_images,SegmentOne_train_labels,SegmentOne_validation_labels ,0)
+evaluate(SegmentOne_train_images,SegmentTwo_train_images,SegmentThree_train_images, SegmentOne_validation_images,SegmentTwo_validation_images, SegmentThree_validation_images,SegmentOne_train_labels,SegmentOne_validation_labels ,0)
 
 
