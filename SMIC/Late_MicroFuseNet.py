@@ -27,7 +27,7 @@ K.set_image_dim_ordering('th')
 predictor_path = "shape_predictor_68_face_landmarks.dat"
 predictor = dlib.shape_predictor(predictor_path)
 detector = dlib.get_frontal_face_detector()
-'''
+
 class TooManyFaces(Exception):
     pass
 
@@ -230,7 +230,7 @@ numpy.save('numpy_training_datasets/late_microexpfusenetnoselabels.npy', nose_tr
 left_eye_training_set = numpy.load('numpy_training_datasets/late_microexpfusenetlefteyeimages.npy')
 right_eye_training_set = numpy.load('numpy_training_datasets/late_microexpfusenetrighteyeimages.npy')
 nose_training_set = numpy.load('numpy_training_datasets/late_microexpfusenetnoseimages.npy')
-
+'''
 
 left_eye_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetlefteyelabels.npy')
 right_eye_training_labels = numpy.load('numpy_training_datasets/late_microexpfusenetrighteyelabels.npy')
