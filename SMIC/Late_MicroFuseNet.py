@@ -318,7 +318,7 @@ numpy.save('numpy_validation_datasets/late_microexpfusenet_nose_val_labels.npy',
 
 # Training the model
 start = timeit.timeit()
-history = model.fit([left_eye_train_images,right_eye_train_images,nose_train_images], left_eye_train_labels, validation_data = ([left_eye_training_set,right_eye_training_set,nose_training_set], left_eye_training_labels), callbacks=callbacks_list, batch_size = 16, nb_epoch = 100, shuffle=True)
+history = model.fit([left_eye_train_images,right_eye_train_images,nose_train_images], left_eye_train_labels, validation_data = ([left_eye_validation_images,right_eye_validation_images,nose_validation_images], left_eye_validation_labels), callbacks=callbacks_list, batch_size = 16, nb_epoch = 100, shuffle=True)
 end = timeit.timeit()
 # Loading Load validation set from numpy array
 
