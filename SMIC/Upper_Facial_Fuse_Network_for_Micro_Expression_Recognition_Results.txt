@@ -1,0 +1,23 @@
+nose_input = Input(shape = (1, 32, 32, 18))
+nose_conv = Convolution3D(32, (3, 3, 15))(nose_input)
+ract_5 (ACTIVATION)(nose_conv)
+maxpool_3 = MaxPooling3D(pool_size=(3, 3, 3))(ract_5)
+ract_6 = (ACTIVATION)(maxpool_3)
+dropout_7 = Dropout(0.5)(ract_6)
+flatten_3 = Flatten()(dropout_7)
+dense_5= Dense(1024, )(flatten_3)
+dropout_8 = Dropout(0.5)(dense_5)
+dense_6 = Dense(128, )(dropout_8)
+dropout_9 = Dropout(0.5)(dense_6)
+
+
+concat = Concatenate(axis = 1)([dropout_3, dropout_6,dropout_9])
+dense_7 = Dense(3, )(concat)
+dropout_10 = Dropout(0.5)(dense_7)
+activation = Activation('softmax')(dropout_10)
+
+-(32*32)(left eye, right eye, nose)(100)(16)
+	-relu 
+		acc=23
+
+		
