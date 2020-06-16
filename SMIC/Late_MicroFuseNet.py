@@ -14,9 +14,9 @@ import timeit
 
 def evaluate(segment_train_images, segment_validation_images, segment_train_labels, segment_validation_labels,test_index ):
     # Fusion Model
-    left_eye_input = Input(shape=(1, 32, 32, 18))
-    left_eye_conv = Convolution3D(32, (3, 3, 15))(left_eye_input)
-    ract_1 = PReLU(alpha_initializer="zeros")(left_eye_conv)
+    SegmentOne_input = Input(shape=(1, 32, 32, 18))
+    SegmentOne_conv = Convolution3D(32, (3, 3, 15))(SegmentOne_input)
+    ract_1 = PReLU(alpha_initializer="zeros")(SegmentOne_conv)
     dropout_11 = Dropout(0.5)(ract_1)
     maxpool_1 = MaxPooling3D(pool_size=(3, 3, 3))(dropout_11)
     ract_2 = PReLU(alpha_initializer="zeros")(maxpool_1)
@@ -27,9 +27,9 @@ def evaluate(segment_train_images, segment_validation_images, segment_train_labe
     dense_2 = Dense(128, )(dropout_2)
     dropout_3 = Dropout(0.5)(dense_2)
 
-    right_eye_input = Input(shape=(1, 32, 32, 18))
-    right_eye_conv = Convolution3D(32, (3, 3, 15))(right_eye_input)
-    ract_3 = PReLU(alpha_initializer="zeros")(right_eye_conv)
+    SegmentTwo_input = Input(shape=(1, 32, 32, 18))
+    SegmentTwo_conv = Convolution3D(32, (3, 3, 15))(SegmentTwo_input)
+    ract_3 = PReLU(alpha_initializer="zeros")(SegmentTwo_conv)
     dropout_12 = Dropout(0.5)(ract_3)
     maxpool_2 = MaxPooling3D(pool_size=(3, 3, 3))(dropout_12)
     ract_4 = PReLU(alpha_initializer="zeros")(maxpool_2)
@@ -40,9 +40,9 @@ def evaluate(segment_train_images, segment_validation_images, segment_train_labe
     dense_4 = Dense(128, )(dropout_5)
     dropout_6 = Dropout(0.5)(dense_4)
 
-    nose_input = Input(shape=(1, 32, 32, 18))
-    nose_conv = Convolution3D(32, (3, 3, 15))(nose_input)
-    ract_5 = PReLU(alpha_initializer="zeros")(nose_conv)
+    SegmentThree_input = Input(shape=(1, 32, 32, 18))
+    SegmentThree_conv = Convolution3D(32, (3, 3, 15))(SegmentThree_input)
+    ract_5 = PReLU(alpha_initializer="zeros")(SegmentThree_conv)
     dropout_13 = Dropout(0.5)(ract_5)
     maxpool_3 = MaxPooling3D(pool_size=(3, 3, 3))(dropout_13)
     ract_6 = PReLU(alpha_initializer="zeros")(maxpool_3)
@@ -57,7 +57,7 @@ def evaluate(segment_train_images, segment_validation_images, segment_train_labe
     dense_7 = Dense(3, )(concat)
     activation = Activation('softmax')(dense_7)
 
-    model = Model(inputs=[left_eye_input, right_eye_input, nose_input], outputs=activation)
+    model = Model(inputs=[SegmentOne_input, SegmentTwo_input, SegmentThree_input], outputs=activation)
     model.compile(loss='categorical_crossentropy', optimizer='SGD', metrics=['accuracy'])
 
     filepath = "weights_late_microexpfusenet/weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
@@ -67,7 +67,7 @@ def evaluate(segment_train_images, segment_validation_images, segment_train_labe
     model.summary()
 
     # Training the model
-    history = model.fit([left_eye_train_images,right_eye_train_images,nose_train_images], left_eye_train_labels, validation_data = ([left_eye_validation_images,right_eye_validation_images,nose_validation_images], left_eye_validation_labels), callbacks=callbacks_list, batch_size = 16, nb_epoch = 100, shuffle=True)
+    history = model.fit([SegmentOne_train_images,SegmentTwo_train_images,SegmentThree_train_images], SegmentOne_train_labels, validation_data = ([SegmentOne_validation_images,SegmentTwo_validation_images,SegmentThree_validation_images], SegmentOne_validation_labels), callbacks=callbacks_list, batch_size = 16, nb_epoch = 100, shuffle=True)
 
     # Finding Confusion Matrix using pretrained weights
 
@@ -84,17 +84,17 @@ def evaluate(segment_train_images, segment_validation_images, segment_train_labe
 K.set_image_dim_ordering('th')
 SegmentNameOne='LeftEye'
 SegmentNameTwo='RightEye'
-SegmentNameThree='Nose'
+SegmentNameThree='SegmentThree'
 
 # Load training images and labels that are stored in numpy array
 
-left_eye_training_set = numpy.load('numpy_training_datasets/{0}_images.npy'.format(SegmentNameOne))
-right_eye_training_set = numpy.load('numpy_training_datasets/{0}_images.npy'.format(SegmentNameTwo))
-nose_training_set = numpy.load('numpy_training_datasets/{0}_images.npy'.format(SegmentNameThree))
+SegmentOne_training_set = numpy.load('numpy_training_datasets/{0}_images.npy'.format(SegmentNameOne))
+SegmentTwo_training_set = numpy.load('numpy_training_datasets/{0}_images.npy'.format(SegmentNameTwo))
+SegmentThree_training_set = numpy.load('numpy_training_datasets/{0}_images.npy'.format(SegmentNameThree))
 
-left_eye_training_labels = numpy.load('numpy_training_datasets/{0}_labels.npy'.format(SegmentNameOne))
-right_eye_training_labels = numpy.load('numpy_training_datasets/{0}_labels.npy'.format(SegmentNameTwo))
-nose_training_labels = numpy.load('numpy_training_datasets/{0}_labels.npy'.format(SegmentNameThree))
+SegmentOne_training_labels = numpy.load('numpy_training_datasets/{0}_labels.npy'.format(SegmentNameOne))
+SegmentTwo_training_labels = numpy.load('numpy_training_datasets/{0}_labels.npy'.format(SegmentNameTwo))
+SegmentThree_training_labels = numpy.load('numpy_training_datasets/{0}_labels.npy'.format(SegmentNameThree))
 
 
 
@@ -110,7 +110,9 @@ for train_index, test_index in loo.split(segment_training_set):
     print(segment_traininglabels[train_index])
     print(segment_traininglabels[test_index])
 
-    val_acc = evaluate(segment_training_set[train_index], segment_training_set[test_index],segment_traininglabels[train_index], segment_traininglabels[test_index] ,test_index)
+    val_acc = evaluate(SegmentOne_training_set[train_index],SegmentTwo_training_set[train_index],SegmentThree_training_set[train_index],
+     SegmentOne_training_set[test_index],SegmentTwo_training_set[test_index],SegmentThree_training_set[test_index]
+    ,SegmentOne_training_labels[train_index], SegmentOne_training_labels[test_index] ,test_index)
     tot+=val_acc
     count+=1
     print("------------------------------------------------------------------------")
@@ -128,20 +130,20 @@ print(tot/count)
 
 
 # Spliting the dataset into training and validation sets
-left_eye_train_images, left_eye_validation_images, left_eye_train_labels, left_eye_validation_labels =  train_test_split(left_eye_training_set, left_eye_training_labels, test_size=0.2, random_state=42)
-right_eye_train_images, right_eye_validation_images, right_eye_train_labels, right_eye_validation_labels =  train_test_split(right_eye_training_set, right_eye_training_labels, test_size=0.2, random_state=42)
-nose_train_images, nose_validation_images, nose_train_labels, nose_validation_labels =  train_test_split(nose_training_set, nose_training_labels, test_size=0.2, random_state=42)
+SegmentOne_train_images, SegmentOne_validation_images, SegmentOne_train_labels, SegmentOne_validation_labels =  train_test_split(SegmentOne_training_set, SegmentOne_training_labels, test_size=0.2, random_state=42)
+SegmentTwo_train_images, SegmentTwo_validation_images, SegmentTwo_train_labels, SegmentTwo_validation_labels =  train_test_split(SegmentTwo_training_set, SegmentTwo_training_labels, test_size=0.2, random_state=42)
+SegmentThree_train_images, SegmentThree_validation_images, SegmentThree_train_labels, SegmentThree_validation_labels =  train_test_split(SegmentThree_training_set, SegmentThree_training_labels, test_size=0.2, random_state=42)
 
 
 
 # Save validation set in a numpy array
-numpy.save('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameOne), left_eye_validation_images)
-numpy.save('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameTwo), right_eye_validation_images)
-numpy.save('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameThree), nose_validation_images)
+numpy.save('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameOne), SegmentOne_validation_images)
+numpy.save('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameTwo), SegmentTwo_validation_images)
+numpy.save('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameThree), SegmentThree_validation_images)
 
-numpy.save('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameOne), left_eye_validation_labels)
-numpy.save('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameTwo), right_eye_validation_labels)
-numpy.save('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameThree), nose_validation_labels)
+numpy.save('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameOne), SegmentOne_validation_labels)
+numpy.save('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameTwo), SegmentTwo_validation_labels)
+numpy.save('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameThree), SegmentThree_validation_labels)
 
 
 
@@ -152,6 +154,6 @@ numpy.save('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameThree), 
 # nimg = numpy.load('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameThree))
 # labels = numpy.load('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameOne))
 
-evaluate(segment_train_images, segment_validation_images,segment_train_labels, segment_validation_labels ,0)
+evaluate(SegmentOne_train_images,SegmentTwo_train_images,SegmentThree_train_images SegmentOne_validation_images,SegmentTwo_validation_images, SegmentThree_validation_images,SegmentOne_train_labels,SegmentOne_validation_labels ,0)
 
 
