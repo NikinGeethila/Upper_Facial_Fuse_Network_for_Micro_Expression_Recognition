@@ -131,10 +131,10 @@ for typepath in (negativepath,positivepath,surprisepath):
         left_eye_training_list.append(left_eye_videoarray)
         right_eye_training_list.append(right_eye_videoarray)
         nose_training_list.append(nose_videoarray)
-        if typepath==surprisepath:
-            left_eye_training_list.append(left_eye_videoarray)
-            right_eye_training_list.append(right_eye_videoarray)
-            nose_training_list.append(nose_videoarray)
+        # if typepath==surprisepath:
+        #     left_eye_training_list.append(left_eye_videoarray)
+        #     right_eye_training_list.append(right_eye_videoarray)
+        #     nose_training_list.append(nose_videoarray)
 
 
 left_eye_training_list = numpy.asarray(left_eye_training_list)
@@ -149,17 +149,34 @@ left_eye_traininglabels = numpy.zeros((left_eye_trainingsamples, ), dtype = int)
 right_eye_traininglabels = numpy.zeros((right_eye_trainingsamples, ), dtype = int)
 nose_traininglabels = numpy.zeros((nose_trainingsamples, ), dtype = int)
 
-left_eye_traininglabels[0:66] = 0
-left_eye_traininglabels[66:113] = 1
-left_eye_traininglabels[113:156] = 2
+# left_eye_traininglabels[0:66] = 0
+# left_eye_traininglabels[66:113] = 1
+# left_eye_traininglabels[113:156] = 2
+#
+# right_eye_traininglabels[0:66] = 0
+# right_eye_traininglabels[66:113] = 1
+# right_eye_traininglabels[113:156] = 2
+#
+# nose_traininglabels[0:66] = 0
+# nose_traininglabels[66:113] = 1
+# nose_traininglabels[113:156] = 2
 
-right_eye_traininglabels[0:66] = 0
-right_eye_traininglabels[66:113] = 1
-right_eye_traininglabels[113:156] = 2
-
-nose_traininglabels[0:66] = 0
-nose_traininglabels[66:113] = 1
-nose_traininglabels[113:156] = 2
+for typepath in (negativepath,positivepath,surprisepath):
+    directorylisting = os.listdir(typepath)
+    print(typepath)
+    for video in range(len(directorylisting)):
+        if typepath==negativepath:
+            left_eye_traininglabels[video]=0
+            right_eye_traininglabels[video] = 0
+            nose_traininglabels[video] = 0
+        if typepath==positivepath:
+            left_eye_traininglabels[video]=1
+            right_eye_traininglabels[video] = 1
+            nose_traininglabels[video] = 1
+        if typepath==surprisepath:
+            left_eye_traininglabels[video]=2
+            right_eye_traininglabels[video]=2
+            nose_traininglabels[video]=2
 
 left_eye_traininglabels = np_utils.to_categorical(left_eye_traininglabels, 3)
 right_eye_traininglabels = np_utils.to_categorical(right_eye_traininglabels, 3)
@@ -206,8 +223,8 @@ numpy.save('numpy_training_datasets/late_microexpfusenetnoseimages.npy', nose_tr
 numpy.save('numpy_training_datasets/late_microexpfusenetlefteyelabels.npy', left_eye_training_labels)
 numpy.save('numpy_training_datasets/late_microexpfusenetrighteyelabels.npy', right_eye_training_labels)
 numpy.save('numpy_training_datasets/late_microexpfusenetnoselabels.npy', nose_traininglabels)
-
 '''
+
 # Load training images and labels that are stored in numpy array
 
 left_eye_training_set = numpy.load('numpy_training_datasets/late_microexpfusenetlefteyeimages.npy')
@@ -226,7 +243,8 @@ print(len(nose_training_labels))
 left_eye_input = Input(shape = (1, 32, 32, 18))
 left_eye_conv = Convolution3D(32, (3, 3, 15))(left_eye_input)
 ract_1 = PReLU(alpha_initializer="zeros")(left_eye_conv)
-maxpool_1 = MaxPooling3D(pool_size=(3, 3, 3))(ract_1)
+dropout_11=Dropout(0.5)(ract_1)
+maxpool_1 = MaxPooling3D(pool_size=(3, 3, 3))(dropout_11)
 ract_2 =PReLU(alpha_initializer="zeros") (maxpool_1)
 dropout_1 = Dropout(0.5)(ract_2)
 flatten_1 = Flatten()(dropout_1)
@@ -238,7 +256,8 @@ dropout_3 = Dropout(0.5)(dense_2)
 right_eye_input = Input(shape = (1, 32, 32, 18))
 right_eye_conv = Convolution3D(32, (3, 3, 15))(right_eye_input)
 ract_3 = PReLU(alpha_initializer="zeros")(right_eye_conv)
-maxpool_2 = MaxPooling3D(pool_size=(3, 3, 3))(ract_3)
+dropout_12=Dropout(0.5)(ract_3)
+maxpool_2 = MaxPooling3D(pool_size=(3, 3, 3))(dropout_12)
 ract_4 = PReLU(alpha_initializer="zeros")(maxpool_2)
 dropout_4 = Dropout(0.5)(ract_4)
 flatten_2 = Flatten()(dropout_4)
@@ -250,7 +269,8 @@ dropout_6= Dropout(0.5)(dense_4)
 nose_input = Input(shape = (1, 32, 32, 18))
 nose_conv = Convolution3D(32, (3, 3, 15))(nose_input)
 ract_5 = PReLU(alpha_initializer="zeros")(nose_conv)
-maxpool_3 = MaxPooling3D(pool_size=(3, 3, 3))(ract_5)
+dropout_13=Dropout(0.5)(ract_5)
+maxpool_3 = MaxPooling3D(pool_size=(3, 3, 3))(dropout_13)
 ract_6 = PReLU(alpha_initializer="zeros")(maxpool_3)
 dropout_7 = Dropout(0.5)(ract_6)
 flatten_3 = Flatten()(dropout_7)
@@ -262,8 +282,7 @@ dropout_9 = Dropout(0.5)(dense_6)
 
 concat = Concatenate(axis = 1)([dropout_3, dropout_6,dropout_9])
 dense_7 = Dense(3, )(concat)
-dropout_10 = Dropout(0.5)(dense_7)
-activation = Activation('softmax')(dropout_10)
+activation = Activation('softmax')(dense_7)
 
 model = Model(inputs = [left_eye_input,right_eye_input,nose_input], outputs = activation)
 model.compile(loss = 'categorical_crossentropy', optimizer = 'SGD', metrics = ['accuracy'])
