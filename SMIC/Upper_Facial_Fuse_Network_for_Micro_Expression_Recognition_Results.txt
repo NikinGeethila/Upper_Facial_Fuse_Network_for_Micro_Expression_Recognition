@@ -51,15 +51,15 @@ Dual-stream (right/left eye)  (early_stage)
 Dual-stream (eyes/nose)
 	optimizers
 	-out of 32 validation (final extract)
-		-adam -
+		-adam -25,23,25
 		-SGD - 25,26,25,24
 Dual-stream (right/left eye) (mid_stage)
 	optimizers
 	-out of 32 validation (final extract)
 		-adam -
-		-SGD -
+		-SGD -23,24,23,25
 Dual-stream (right/left eye)  (early_stage)
 	optimizers
 	-out of 32 validation (final extract)
 		-adam -
-		-SGD -
+		-SGD -24,23,25,23
