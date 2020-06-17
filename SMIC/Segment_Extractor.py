@@ -45,7 +45,11 @@ negativepath = '../../../Datasets/SIMC_E_categorical/Negative/'
 positivepath = '../../../Datasets/SIMC_E_categorical/Positive/'
 surprisepath = '../../../Datasets/SIMC_E_categorical/Surprise/'
 
-segmentName = 'Eyes'
+segmentName = 'UpperFace'
+sizeH=32
+sizeV=32
+
+
 
 segment_training_list = []
 counting = 0
@@ -68,8 +72,8 @@ for typepath in (negativepath, positivepath, surprisepath):
                 plt.show()
             numpylandmarks = numpy.asarray(landmarks)
             up = min(numpylandmarks[18][1], numpylandmarks[19][1], numpylandmarks[23][1], numpylandmarks[24][1]) - 20
-            down = max(numpylandmarks[36][1], numpylandmarks[39][1], numpylandmarks[40][1], numpylandmarks[41][1],
-                       numpylandmarks[42][1], numpylandmarks[47][1], numpylandmarks[46][1], numpylandmarks[45][1]) + 10
+            down = max(numpylandmarks[31][1], numpylandmarks[32][1], numpylandmarks[33][1], numpylandmarks[34][1],
+                       numpylandmarks[35][1]) + 5
             left = min(numpylandmarks[17][0], numpylandmarks[18][0], numpylandmarks[36][0])
             right = max(numpylandmarks[26][0], numpylandmarks[25][0], numpylandmarks[45][0])
             segment_image = image[up:down, left:right]
@@ -78,7 +82,7 @@ for typepath in (negativepath, positivepath, surprisepath):
                 imgplot = plt.imshow(img)
                 plt.show()
                 counting += 1
-            segment_image = cv2.resize(segment_image, (32, 32), interpolation=cv2.INTER_AREA)
+            segment_image = cv2.resize(segment_image, (sizeH, sizeV), interpolation=cv2.INTER_AREA)
             segment_image = cv2.cvtColor(segment_image, cv2.COLOR_BGR2GRAY)
 
             segment_frames.append(segment_image)
@@ -87,7 +91,6 @@ for typepath in (negativepath, positivepath, surprisepath):
         segment_videoarray = numpy.rollaxis(numpy.rollaxis(segment_frames, 2, 0), 2, 0)
         segment_training_list.append(segment_videoarray)
 
-print(len(segment_videoarray))
 segment_training_list = numpy.asarray(segment_training_list)
 
 segment_trainingsamples = len(segment_training_list)
@@ -109,7 +112,7 @@ segment_traininglabels = np_utils.to_categorical(segment_traininglabels, 3)
 
 segment_training_data = [segment_training_list, segment_traininglabels]
 (segment_trainingframes, segment_traininglabels) = (segment_training_data[0], segment_training_data[1])
-segment_training_set = numpy.zeros((segment_trainingsamples, 1, 32, 32, 18))
+segment_training_set = numpy.zeros((segment_trainingsamples, 1,sizeH, sizeV, 18))
 for h in range(segment_trainingsamples):
     segment_training_set[h][0][:][:][:] = segment_trainingframes[h, :, :, :]
 
@@ -117,8 +120,8 @@ segment_training_set = segment_training_set.astype('float32')
 segment_training_set -= numpy.mean(segment_training_set)
 segment_training_set /= numpy.max(segment_training_set)
 
-numpy.save('numpy_training_datasets/{0}_images.npy'.format(segmentName), segment_training_set)
-numpy.save('numpy_training_datasets/{0}_labels.npy'.format(segmentName), segment_traininglabels)
+numpy.save('numpy_training_datasets/{0}_images_{1}x{2}.npy'.format(segmentName,sizeH, sizeV), segment_training_set)
+numpy.save('numpy_training_datasets/{0}_labels_{1}x{2}.npy'.format(segmentName,sizeH, sizeV), segment_traininglabels)
 
 """
 ----------------------------
