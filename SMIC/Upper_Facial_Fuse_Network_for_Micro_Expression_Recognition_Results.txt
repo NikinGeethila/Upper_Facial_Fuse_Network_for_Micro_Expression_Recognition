@@ -38,12 +38,12 @@ Dual-stream (right/left eye) (mid_stage)
 	optimizers
 	-out of 32 validation (final extract)
 		-adam -24,23,22,23
-		-SGD -
+		-SGD -24,25,25,22
 Dual-stream (right/left eye)  (early_stage)
 	optimizers
 	-out of 32 validation (final extract)
 		-adam -21,23,25,25
-		-SGD -
+		-SGD -23,24,22,24
 
 ****** pick best and reduce layers
 
@@ -52,6 +52,14 @@ Dual-stream (eyes/nose)
 	optimizers
 	-out of 32 validation (final extract)
 		-adam -
+		-SGD - 25,26,25,24
+Dual-stream (right/left eye) (mid_stage)
+	optimizers
+	-out of 32 validation (final extract)
+		-adam -
 		-SGD -
-	
-
+Dual-stream (right/left eye)  (early_stage)
+	optimizers
+	-out of 32 validation (final extract)
+		-adam -
+		-SGD -
