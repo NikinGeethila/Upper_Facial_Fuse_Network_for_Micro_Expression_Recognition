@@ -29,4 +29,14 @@ activation = Activation('softmax')(dropout_10)
 		acc=24
 	-PRelu
 		acc=23
-		
+Dual-stream (right/left eye)
+	optimizers
+	-out of 32 validation (final extract)
+		-adam -24,22,23
+		-SGD -
+Dual-stream (eyes/nose)
+	optimizers
+	-out of 32 validation (final extract)
+		-adam -
+		-SGD -
+	
