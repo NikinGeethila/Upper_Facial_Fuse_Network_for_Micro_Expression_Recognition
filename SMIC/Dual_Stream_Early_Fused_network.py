@@ -41,9 +41,9 @@ def evaluate(SegmentOne_train_images,SegmentTwo_train_images, SegmentOne_validat
     activation = Activation('softmax')(dense_7)
 
     model = Model(inputs=[SegmentOne_input, SegmentTwo_input], outputs=activation)
-    model.compile(loss='categorical_crossentropy', optimizer='Adam', metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy', optimizer='SGD', metrics=['accuracy'])
 
-    filepath = "weights_late_microexpfusenet/weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
+    filepath = "weights_late_microexpfusenet/early-weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
     checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
     callbacks_list = [checkpoint]
 
