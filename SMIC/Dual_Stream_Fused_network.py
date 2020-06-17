@@ -14,7 +14,7 @@ import timeit
 
 def evaluate(SegmentOne_train_images,SegmentTwo_train_images, SegmentOne_validation_images,SegmentTwo_validation_images,SegmentOne_train_labels,SegmentOne_validation_labels ,test_index ):
     # Fusion Model
-    SegmentOne_input = Input(shape=(1, 32, 32, 18))
+    SegmentOne_input = Input(shape=(1, sizeH, sizeV, 18))
     SegmentOne_conv = Convolution3D(32, (3, 3, 15))(SegmentOne_input)
     ract_1 = PReLU(alpha_initializer="zeros")(SegmentOne_conv)
     dropout_11 = Dropout(0.5)(ract_1)
@@ -27,7 +27,7 @@ def evaluate(SegmentOne_train_images,SegmentTwo_train_images, SegmentOne_validat
     dense_2 = Dense(128, )(dropout_2)
     dropout_3 = Dropout(0.5)(dense_2)
 
-    SegmentTwo_input = Input(shape=(1, 32, 32, 18))
+    SegmentTwo_input = Input(shape=(1, sizeH, sizeV, 18))
     SegmentTwo_conv = Convolution3D(32, (3, 3, 15))(SegmentTwo_input)
     ract_3 = PReLU(alpha_initializer="zeros")(SegmentTwo_conv)
     dropout_12 = Dropout(0.5)(ract_3)
@@ -45,7 +45,7 @@ def evaluate(SegmentOne_train_images,SegmentTwo_train_images, SegmentOne_validat
     activation = Activation('softmax')(dense_7)
 
     model = Model(inputs=[SegmentOne_input, SegmentTwo_input], outputs=activation)
-    model.compile(loss='categorical_crossentropy', optimizer='SGD', metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy', optimizer='Adam', metrics=['accuracy'])
 
     filepath = "weights_late_microexpfusenet/weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
     checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
@@ -71,14 +71,16 @@ def evaluate(SegmentOne_train_images,SegmentTwo_train_images, SegmentOne_validat
 K.set_image_dim_ordering('th')
 SegmentNameOne='LeftEye'
 SegmentNameTwo='RightEye'
+sizeH=32
+sizeV=32
 
 # Load training images and labels that are stored in numpy array
 
-SegmentOne_training_set = numpy.load('numpy_training_datasets/{0}_images.npy'.format(SegmentNameOne))
-SegmentTwo_training_set = numpy.load('numpy_training_datasets/{0}_images.npy'.format(SegmentNameTwo))
+SegmentOne_training_set = numpy.load('numpy_training_datasets/{0}_images_{1}x{2}.npy'.format(SegmentNameOne,sizeH, sizeV))
+SegmentTwo_training_set = numpy.load('numpy_training_datasets/{0}_images_{1}x{2}.npy'.format(SegmentNameTwo,sizeH, sizeV))
 
-SegmentOne_training_labels = numpy.load('numpy_training_datasets/{0}_labels.npy'.format(SegmentNameOne))
-SegmentTwo_training_labels = numpy.load('numpy_training_datasets/{0}_labels.npy'.format(SegmentNameTwo))
+SegmentOne_training_labels = numpy.load('numpy_training_datasets/{0}_labels_{1}x{2}.npy'.format(SegmentNameOne,sizeH, sizeV))
+SegmentTwo_training_labels = numpy.load('numpy_training_datasets/{0}_labels_{1}x{2}.npy'.format(SegmentNameTwo,sizeH, sizeV))
 
 
 
@@ -120,19 +122,19 @@ SegmentTwo_train_images, SegmentTwo_validation_images, SegmentTwo_train_labels, 
 
 
 # Save validation set in a numpy array
-numpy.save('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameOne), SegmentOne_validation_images)
-numpy.save('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameTwo), SegmentTwo_validation_images)
+numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}.npy'.format(SegmentNameOne,sizeH, sizeV), SegmentOne_validation_images)
+numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}.npy'.format(SegmentNameTwo,sizeH, sizeV), SegmentTwo_validation_images)
 
-numpy.save('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameOne), SegmentOne_validation_labels)
-numpy.save('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameTwo), SegmentTwo_validation_labels)
+numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}.npy'.format(SegmentNameOne,sizeH, sizeV), SegmentOne_validation_labels)
+numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}.npy'.format(SegmentNameTwo,sizeH, sizeV), SegmentTwo_validation_labels)
 
 
 
 # Loading Load validation set from numpy array
 
-# SegmentOne_validation_images = numpy.load('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameOne))
-# SegmentTwo_validation_images = numpy.load('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameTwo))
-# SegmentOne_validation_labels = numpy.load('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameOne))
+# SegmentOne_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}.npy'.format(segmentName,sizeH, sizeV))
+# SegmentTwo_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}.npy'.format(segmentName,sizeH, sizeV))
+# SegmentOne_validation_labels = numpy.load('numpy_validation_datasets/{0}_labels_{1}x{2}.npy'.format(segmentName,sizeH, sizeV))
 
 evaluate(SegmentOne_train_images,SegmentTwo_train_images, SegmentOne_validation_images,SegmentTwo_validation_images,SegmentOne_train_labels,SegmentOne_validation_labels ,0)
 
