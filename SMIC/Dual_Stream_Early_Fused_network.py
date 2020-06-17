@@ -18,20 +18,18 @@ def evaluate(SegmentOne_train_images,SegmentTwo_train_images, SegmentOne_validat
     SegmentOne_conv = Convolution3D(32, (3, 3, 15))(SegmentOne_input)
     ract_1 = PReLU(alpha_initializer="zeros")(SegmentOne_conv)
     dropout_11 = Dropout(0.5)(ract_1)
-    maxpool_1 = MaxPooling3D(pool_size=(3, 3, 3))(dropout_11)
-    ract_2 = PReLU(alpha_initializer="zeros")(maxpool_1)
-    dropout_1 = Dropout(0.5)(ract_2)
-    flatten_1 = Flatten()(dropout_1)
-    dense_1 = Dense(1024, )(flatten_1)
-    dropout_2 = Dropout(0.5)(dense_1)
-    dense_2 = Dense(128, )(dropout_2)
-    dropout_3 = Dropout(0.5)(dense_2)
+
+
 
     SegmentTwo_input = Input(shape=(1, sizeH, sizeV, 18))
     SegmentTwo_conv = Convolution3D(32, (3, 3, 15))(SegmentTwo_input)
     ract_3 = PReLU(alpha_initializer="zeros")(SegmentTwo_conv)
     dropout_12 = Dropout(0.5)(ract_3)
-    maxpool_2 = MaxPooling3D(pool_size=(3, 3, 3))(dropout_12)
+
+
+
+    concat = Concatenate(axis=1)([dropout_11, dropout_12])
+    maxpool_2 = MaxPooling3D(pool_size=(3, 3, 3))(concat)
     ract_4 = PReLU(alpha_initializer="zeros")(maxpool_2)
     dropout_4 = Dropout(0.5)(ract_4)
     flatten_2 = Flatten()(dropout_4)
@@ -39,13 +37,11 @@ def evaluate(SegmentOne_train_images,SegmentTwo_train_images, SegmentOne_validat
     dropout_5 = Dropout(0.5)(dense_3)
     dense_4 = Dense(128, )(dropout_5)
     dropout_6 = Dropout(0.5)(dense_4)
-
-    concat = Concatenate(axis=1)([dropout_3, dropout_6])
-    dense_7 = Dense(3, )(concat)
+    dense_7 = Dense(3, )(dropout_6)
     activation = Activation('softmax')(dense_7)
 
     model = Model(inputs=[SegmentOne_input, SegmentTwo_input], outputs=activation)
-    model.compile(loss='categorical_crossentropy', optimizer='SGD', metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy', optimizer='Adam', metrics=['accuracy'])
 
     filepath = "weights_late_microexpfusenet/weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
     checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
