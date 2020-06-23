@@ -84,7 +84,7 @@ def evaluate(SegmentOne_train_images,SegmentTwo_train_images,SegmentThree_train_
 K.set_image_dim_ordering('th')
 SegmentNameOne='LeftEye'
 SegmentNameTwo='RightEye'
-SegmentNameThree='SegmentThree'
+SegmentNameThree='Nose'
 
 # Load training images and labels that are stored in numpy array
 
