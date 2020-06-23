@@ -7,7 +7,7 @@ from keras.layers.convolutional import Convolution3D, MaxPooling3D
 from keras.layers import Concatenate, Input, concatenate, add, multiply, maximum
 from keras.layers import LeakyReLU,PReLU
 from keras.callbacks import ModelCheckpoint
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split,LeaveOneOut
 from keras import backend as K
 import timeit
 
@@ -65,8 +65,8 @@ def evaluate(SegmentOne_train_images,SegmentTwo_train_images, SegmentOne_validat
 
 
 K.set_image_dim_ordering('th')
-SegmentNameOne='LeftEye'
-SegmentNameTwo='RightEye'
+SegmentNameOne='Eyes'
+SegmentNameTwo='Nose'
 sizeH=32
 sizeV=32
 
@@ -80,17 +80,17 @@ SegmentTwo_training_labels = numpy.load('numpy_training_datasets/{0}_labels_{1}x
 
 
 
-'''
+
 #-----------------------------------------------------------------------------------------------------------------
 #LOOCV
 loo = LeaveOneOut()
-loo.get_n_splits(segment_training_set)
+loo.get_n_splits(SegmentOne_training_set)
 tot=0
 count=0
-for train_index, test_index in loo.split(segment_training_set):
+for train_index, test_index in loo.split(SegmentOne_training_set):
 
-    print(segment_traininglabels[train_index])
-    print(segment_traininglabels[test_index])
+    # print(segment_traininglabels[train_index])
+    # print(segment_traininglabels[test_index])
 
     val_acc = evaluate(SegmentOne_training_set[train_index],SegmentTwo_training_set[train_index],
      SegmentOne_training_set[test_index],SegmentTwo_training_set[test_index]
@@ -133,5 +133,5 @@ numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}.npy'.format(SegmentName
 # SegmentOne_validation_labels = numpy.load('numpy_validation_datasets/{0}_labels_{1}x{2}.npy'.format(segmentName,sizeH, sizeV))
 
 evaluate(SegmentOne_train_images,SegmentTwo_train_images, SegmentOne_validation_images,SegmentTwo_validation_images,SegmentOne_train_labels,SegmentOne_validation_labels ,0)
-
+'''
 
