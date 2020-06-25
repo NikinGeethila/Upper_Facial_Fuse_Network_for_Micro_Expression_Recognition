@@ -20,7 +20,8 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="C:/Program Files/Git" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Upper_Facial_Feature_Micro_Expression_Detection_Network" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RunDashboard">
@@ -35,7 +36,73 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.Dual_Stream_Early_Fused_network">
+    <configuration name="Dual_Stream_Early_Fused_network" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/SMIC" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SMIC/Dual_Stream_Early_Fused_network.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Dual_Stream_Fused_network" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/SMIC" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SMIC/Dual_Stream_Fused_network.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Dual_Stream_Mid_Fused_network" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/SMIC" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SMIC/Dual_Stream_Mid_Fused_network.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="Late_MicroFuseNet" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -58,8 +125,34 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="Segment_Extractor" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/SMIC" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/SMIC/Segment_Extractor.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Dual_Stream_Early_Fused_network" />
+        <item itemvalue="Python.Dual_Stream_Fused_network" />
+        <item itemvalue="Python.Dual_Stream_Mid_Fused_network" />
+        <item itemvalue="Python.Segment_Extractor" />
         <item itemvalue="Python.Late_MicroFuseNet" />
       </list>
     </recent_temporary>
@@ -75,6 +168,7 @@
       <option name="presentableId" value="Default" />
       <updated>1592079709141</updated>
       <workItem from="1592079710509" duration="12084000" />
+      <workItem from="1592260018124" duration="53238000" />
     </task>
     <servers />
   </component>
@@ -86,7 +180,9 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
@@ -98,6 +194,10 @@
     </ignored-roots>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition$Late_MicroFuseNet.coverage" NAME="Late_MicroFuseNet Coverage Results" MODIFIED="1592091635008" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/SMIC" />
+    <SUITE FILE_PATH="coverage/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition$Dual_Stream_Fused_network.coverage" NAME="Dual_Stream_Fused_network Coverage Results" MODIFIED="1592430104863" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/SMIC" />
+    <SUITE FILE_PATH="coverage/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition$Dual_Stream_Early_Fused_network.coverage" NAME="Dual_Stream_Early_Fused_network Coverage Results" MODIFIED="1592548086449" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/SMIC" />
+    <SUITE FILE_PATH="coverage/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition$Segment_Extractor.coverage" NAME="Segment_Extractor Coverage Results" MODIFIED="1592370753119" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/SMIC" />
+    <SUITE FILE_PATH="coverage/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition$Dual_Stream_Mid_Fused_network.coverage" NAME="Dual_Stream_Mid_Fused_network Coverage Results" MODIFIED="1592429924207" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/SMIC" />
+    <SUITE FILE_PATH="coverage/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition$Late_MicroFuseNet.coverage" NAME="Late_MicroFuseNet Coverage Results" MODIFIED="1592334173179" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/SMIC" />
   </component>
 </project>
