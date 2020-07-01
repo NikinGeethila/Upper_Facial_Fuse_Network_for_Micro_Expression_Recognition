@@ -34,14 +34,14 @@ def evaluate(SegmentOne_train_images,SegmentTwo_train_images, SegmentOne_validat
     Combined_conv = Convolution3D(32, (3, 3, 3), strides=1, padding='Same')(concat)
     ract_3 = PReLU()(Combined_conv)
     flatten_1 = Flatten()(ract_3)
-    dense_7 = Dense(3, init='normal' )(flatten_1)
-    drop1=Dropout(0.5)(dense_7)
+    dense_1 = Dense(3, init='normal' )(flatten_1)
+    drop1=Dropout(0.5)(dense_1)
     activation = Activation('softmax')(drop1)
     opt = SGD(lr=0.01)
     model = Model(inputs=[SegmentOne_input, SegmentTwo_input], outputs=activation)
     model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
-    filepath="weights_SMIC/weights-improvement"+str(test_index)+"-{epoch:02d}-{val_acc:.2f}.hdf5"
+    filepath="weights_SMIC/Early-weights-improvement"+str(test_index)+"-{epoch:02d}-{val_acc:.2f}.hdf5"
     checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
     EarlyStop=EarlyStopping(monitor='val_acc',min_delta=0,patience=50,restore_best_weights=True,verbose=1, mode='max')
     reduce =ReduceLROnPlateau(monitor='val_acc',factor=0.5,patience=30,cooldown=10,verbose=1,min_delta=0, mode='max',min_lr=0.0005)
