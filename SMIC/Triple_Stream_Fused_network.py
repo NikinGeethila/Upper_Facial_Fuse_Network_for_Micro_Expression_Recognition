@@ -6,63 +6,57 @@ from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Convolution3D, MaxPooling3D
 from keras.layers import Concatenate, Input, concatenate, add, multiply, maximum
 from keras.layers import LeakyReLU,PReLU
-from keras.callbacks import ModelCheckpoint
-from sklearn.model_selection import train_test_split
+from keras.callbacks import ModelCheckpoint,EarlyStopping,ReduceLROnPlateau,Callback
+from sklearn.model_selection import train_test_split,LeaveOneOut
 from keras import backend as K
+from keras.optimizers import Adam,SGD
 import timeit
 
+class myCallback(Callback):
+    def on_epoch_end(self, epoch, logs={}):
+        if(logs.get('val_acc') >= 1.0):
+            print("\nReached %2.2f%% accuracy, so stopping training!!" %(1.0*100))
+            self.model.stop_training = True
 
 def evaluate(SegmentOne_train_images,SegmentTwo_train_images,SegmentThree_train_images, SegmentOne_validation_images,SegmentTwo_validation_images, SegmentThree_validation_images,SegmentOne_train_labels,SegmentOne_validation_labels ,test_index ):
     # Fusion Model
-    SegmentOne_input = Input(shape=(1, 32, 32, 18))
-    SegmentOne_conv = Convolution3D(32, (3, 3, 15))(SegmentOne_input)
-    ract_1 = PReLU(alpha_initializer="zeros")(SegmentOne_conv)
-    dropout_11 = Dropout(0.5)(ract_1)
-    maxpool_1 = MaxPooling3D(pool_size=(3, 3, 3))(dropout_11)
-    ract_2 = PReLU(alpha_initializer="zeros")(maxpool_1)
-    dropout_1 = Dropout(0.5)(ract_2)
-    flatten_1 = Flatten()(dropout_1)
-    dense_1 = Dense(1024, )(flatten_1)
-    dropout_2 = Dropout(0.5)(dense_1)
-    dense_2 = Dense(128, )(dropout_2)
-    dropout_3 = Dropout(0.5)(dense_2)
+    SegmentOne_input = Input(shape=(1, sizeH, sizeV, sizeD))
+    SegmentOne_conv = Convolution3D(32, (20, 20, 9), strides=(10, 10, 3), padding='Same')(SegmentOne_input)
+    ract_1 = PReLU()(SegmentOne_conv)
+    SegmentOne_conv_Two = Convolution3D(32, (3, 3, 3), strides=1, padding='Same')(ract_1)
+    ract_2 = PReLU()(SegmentOne_conv_Two)
+    flatten_1 = Flatten()(ract_2)
 
-    SegmentTwo_input = Input(shape=(1, 32, 32, 18))
-    SegmentTwo_conv = Convolution3D(32, (3, 3, 15))(SegmentTwo_input)
-    ract_3 = PReLU(alpha_initializer="zeros")(SegmentTwo_conv)
-    dropout_12 = Dropout(0.5)(ract_3)
-    maxpool_2 = MaxPooling3D(pool_size=(3, 3, 3))(dropout_12)
-    ract_4 = PReLU(alpha_initializer="zeros")(maxpool_2)
-    dropout_4 = Dropout(0.5)(ract_4)
-    flatten_2 = Flatten()(dropout_4)
-    dense_3 = Dense(1024, )(flatten_2)
-    dropout_5 = Dropout(0.5)(dense_3)
-    dense_4 = Dense(128, )(dropout_5)
-    dropout_6 = Dropout(0.5)(dense_4)
+    SegmentTwo_input = Input(shape=(1, sizeH, sizeV, sizeD))
+    SegmentTwo_conv = Convolution3D(32, (20, 20, 9), strides=(10, 10, 3), padding='Same')(SegmentTwo_input)
+    ract_3 = PReLU()(SegmentTwo_conv)
+    SegmentTwo_conv_Two = Convolution3D(32, (3, 3, 3), strides=1, padding='Same')(ract_3)
+    ract_4 = PReLU()(SegmentTwo_conv_Two)
+    flatten_2 = Flatten()(ract_4)
 
-    SegmentThree_input = Input(shape=(1, 32, 32, 18))
-    SegmentThree_conv = Convolution3D(32, (3, 3, 15))(SegmentThree_input)
-    ract_5 = PReLU(alpha_initializer="zeros")(SegmentThree_conv)
-    dropout_13 = Dropout(0.5)(ract_5)
-    maxpool_3 = MaxPooling3D(pool_size=(3, 3, 3))(dropout_13)
-    ract_6 = PReLU(alpha_initializer="zeros")(maxpool_3)
-    dropout_7 = Dropout(0.5)(ract_6)
-    flatten_3 = Flatten()(dropout_7)
-    dense_5 = Dense(1024, )(flatten_3)
-    dropout_8 = Dropout(0.5)(dense_5)
-    dense_6 = Dense(128, )(dropout_8)
-    dropout_9 = Dropout(0.5)(dense_6)
+    SegmentThree_input = Input(shape=(1, sizeH, sizeV, sizeD))
+    SegmentThree_conv = Convolution3D(32, (20, 20, 9), strides=(10, 10, 3), padding='Same')(SegmentThree_input)
+    ract_5 = PReLU()(SegmentThree_conv)
+    SegmentThree_conv_Two = Convolution3D(32, (3, 3, 3), strides=1, padding='Same')(ract_5)
+    ract_6 = PReLU()(SegmentThree_conv_Two)
+    flatten_3 = Flatten()(ract_6)
 
-    concat = Concatenate(axis=1)([dropout_3, dropout_6, dropout_9])
-    dense_7 = Dense(3, )(concat)
-    activation = Activation('softmax')(dense_7)
+    concat = Concatenate(axis=1)([flatten_1, flatten_2, flatten_3])
+    dense_1 = Dense(3, init='normal' )(concat)
+    drop1 = Dropout(0.5)(dense_1)
+    activation = Activation('softmax')(drop1)
+    opt = SGD(lr=0.01)
 
     model = Model(inputs=[SegmentOne_input, SegmentTwo_input, SegmentThree_input], outputs=activation)
     model.compile(loss='categorical_crossentropy', optimizer='SGD', metrics=['accuracy'])
 
-    filepath = "weights_late_microexpfusenet/weights-improvement-{epoch:02d}-{val_acc:.2f}.hdf5"
+    filepath = "weights_SMIC/Late-Triple-weights-improvement" + str(test_index) + "-{epoch:02d}-{val_acc:.2f}.hdf5"
     checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
-    callbacks_list = [checkpoint]
+    EarlyStop = EarlyStopping(monitor='val_acc', min_delta=0, patience=50, restore_best_weights=True, verbose=1,
+                              mode='max')
+    reduce = ReduceLROnPlateau(monitor='val_acc', factor=0.5, patience=30, cooldown=10, verbose=1, min_delta=0,
+                               mode='max', min_lr=0.0005)
+    callbacks_list = [EarlyStop, reduce, myCallback()]
 
     model.summary()
 
@@ -85,30 +79,32 @@ K.set_image_dim_ordering('th')
 SegmentNameOne='LeftEye'
 SegmentNameTwo='RightEye'
 SegmentNameThree='Nose'
-
+sizeH=32
+sizeV=32
+sizeD=30
 # Load training images and labels that are stored in numpy array
 
-SegmentOne_training_set = numpy.load('numpy_training_datasets/{0}_images.npy'.format(SegmentNameOne))
-SegmentTwo_training_set = numpy.load('numpy_training_datasets/{0}_images.npy'.format(SegmentNameTwo))
-SegmentThree_training_set = numpy.load('numpy_training_datasets/{0}_images.npy'.format(SegmentNameThree))
+SegmentOne_training_set = numpy.load('numpy_training_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD))
+SegmentTwo_training_set = numpy.load('numpy_training_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD))
+SegmentThree_training_set = numpy.load('numpy_training_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameThree,sizeH, sizeV,sizeD))
 
-SegmentOne_training_labels = numpy.load('numpy_training_datasets/{0}_labels.npy'.format(SegmentNameOne))
-SegmentTwo_training_labels = numpy.load('numpy_training_datasets/{0}_labels.npy'.format(SegmentNameTwo))
-SegmentThree_training_labels = numpy.load('numpy_training_datasets/{0}_labels.npy'.format(SegmentNameThree))
+SegmentOne_training_labels = numpy.load('numpy_training_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD))
+SegmentTwo_training_labels = numpy.load('numpy_training_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD))
+SegmentThree_training_labels = numpy.load('numpy_training_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameThree,sizeH, sizeV,sizeD))
 
 
 
-'''
+
 #-----------------------------------------------------------------------------------------------------------------
 #LOOCV
 loo = LeaveOneOut()
-loo.get_n_splits(segment_training_set)
+loo.get_n_splits(SegmentOne_training_set)
 tot=0
 count=0
-for train_index, test_index in loo.split(segment_training_set):
+for train_index, test_index in loo.split(SegmentOne_training_set):
 
-    print(segment_traininglabels[train_index])
-    print(segment_traininglabels[test_index])
+    print("RUN: ",test_index)
+
 
     val_acc = evaluate(SegmentOne_training_set[train_index],SegmentTwo_training_set[train_index],SegmentThree_training_set[train_index],
      SegmentOne_training_set[test_index],SegmentTwo_training_set[test_index],SegmentThree_training_set[test_index]
@@ -137,23 +133,23 @@ SegmentThree_train_images, SegmentThree_validation_images, SegmentThree_train_la
 
 
 # Save validation set in a numpy array
-numpy.save('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameOne), SegmentOne_validation_images)
-numpy.save('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameTwo), SegmentTwo_validation_images)
-numpy.save('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameThree), SegmentThree_validation_images)
+numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD), SegmentOne_validation_images)
+numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD), SegmentTwo_validation_images)
+numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameThree,sizeH, sizeV,sizeD), SegmentThree_validation_images)
 
-numpy.save('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameOne), SegmentOne_validation_labels)
-numpy.save('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameTwo), SegmentTwo_validation_labels)
-numpy.save('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameThree), SegmentThree_validation_labels)
+numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD), SegmentOne_validation_labels)
+numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD), SegmentTwo_validation_labels)
+numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameThree,sizeH, sizeV,sizeD), SegmentThree_validation_labels)
 
 
 
 # Loading Load validation set from numpy array
 
-# SegmentOne_validation_images = numpy.load('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameOne))
-# SegmentTwo_validation_images = numpy.load('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameTwo))
-# SegmentThree_validation_images = numpy.load('numpy_validation_datasets/{0}_images.npy'.format(SegmentNameThree))
-# SegmentOne_validation_labels = numpy.load('numpy_validation_datasets/{0}_labels.npy'.format(SegmentNameOne))
+# SegmentOne_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD))
+# SegmentTwo_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD))
+# SegmentThree_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameThree,sizeH, sizeV,sizeD))
+# SegmentOne_validation_labels = numpy.load('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD))
 
 evaluate(SegmentOne_train_images,SegmentTwo_train_images,SegmentThree_train_images, SegmentOne_validation_images,SegmentTwo_validation_images, SegmentThree_validation_images,SegmentOne_train_labels,SegmentOne_validation_labels ,0)
 
-
+'''
