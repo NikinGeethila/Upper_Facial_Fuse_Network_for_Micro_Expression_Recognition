@@ -23,18 +23,19 @@ def evaluate(SegmentOne_train_images,SegmentTwo_train_images, SegmentOne_validat
     SegmentOne_input = Input(shape=(1, sizeH, sizeV, sizeD))
     SegmentOne_conv = Convolution3D(32, (20, 20, 9), strides=(10, 10, 3), padding='Same')(SegmentOne_input)
     ract_1 = PReLU()(SegmentOne_conv)
-
+    SegmentOne_conv_Two = Convolution3D(32, (3, 3, 3), strides=1, padding='Same')(ract_1)
+    ract_2 = PReLU()(SegmentOne_conv_Two)
+    flatten_1 = Flatten()(ract_2)
 
     SegmentTwo_input = Input(shape=(1, sizeH, sizeV, sizeD))
     SegmentTwo_conv = Convolution3D(32, (20, 20, 9), strides=(10, 10, 3), padding='Same')(SegmentTwo_input)
-    ract_2 = PReLU()(SegmentTwo_conv)
+    ract_3 = PReLU()(SegmentTwo_conv)
+    SegmentTwo_conv_Two = Convolution3D(32, (3, 3, 3), strides=1, padding='Same')(ract_3)
+    ract_4 = PReLU()(SegmentTwo_conv_Two)
+    flatten_2 = Flatten()(ract_4)
 
-
-    concat = Concatenate(axis=1)([ract_1, ract_2])
-    Combined_conv = Convolution3D(32, (3, 3, 3), strides=1, padding='Same')(concat)
-    ract_3 = PReLU()(Combined_conv)
-    flatten_1 = Flatten()(ract_3)
-    dense_7 = Dense(3, init='normal' )(flatten_1)
+    concat = Concatenate(axis=1)([flatten_1, flatten_2])
+    dense_7 = Dense(3, init='normal' )(concat)
     drop1=Dropout(0.5)(dense_7)
     activation = Activation('softmax')(drop1)
     opt = SGD(lr=0.01)
@@ -88,7 +89,6 @@ loo.get_n_splits(SegmentOne_training_set)
 tot=0
 count=0
 for train_index, test_index in loo.split(SegmentOne_training_set):
-
 
     print("RUN: ",test_index)
 
