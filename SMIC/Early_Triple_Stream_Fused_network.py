@@ -23,32 +23,29 @@ def evaluate(SegmentOne_train_images,SegmentTwo_train_images,SegmentThree_train_
     SegmentOne_input = Input(shape=(1, sizeH, sizeV, sizeD))
     SegmentOne_conv = Convolution3D(32, (20, 20, 9), strides=(10, 10, 3), padding='Same')(SegmentOne_input)
     ract_1 = PReLU()(SegmentOne_conv)
-    SegmentOne_conv_Two = Convolution3D(32, (3, 3, 3), strides=1, padding='Same')(ract_1)
-    ract_2 = PReLU()(SegmentOne_conv_Two)
-    flatten_1 = Flatten()(ract_2)
+
 
     SegmentTwo_input = Input(shape=(1, sizeH, sizeV, sizeD))
     SegmentTwo_conv = Convolution3D(32, (20, 20, 9), strides=(10, 10, 3), padding='Same')(SegmentTwo_input)
-    ract_3 = PReLU()(SegmentTwo_conv)
-    SegmentTwo_conv_Two = Convolution3D(32, (3, 3, 3), strides=1, padding='Same')(ract_3)
-    ract_4 = PReLU()(SegmentTwo_conv_Two)
-    flatten_2 = Flatten()(ract_4)
+    ract_2 = PReLU()(SegmentTwo_conv)
+
 
     SegmentThree_input = Input(shape=(1, sizeH, sizeV, sizeD))
     SegmentThree_conv = Convolution3D(32, (20, 20, 9), strides=(10, 10, 3), padding='Same')(SegmentThree_input)
-    ract_5 = PReLU()(SegmentThree_conv)
-    SegmentThree_conv_Two = Convolution3D(32, (3, 3, 3), strides=1, padding='Same')(ract_5)
-    ract_6 = PReLU()(SegmentThree_conv_Two)
-    flatten_3 = Flatten()(ract_6)
+    ract_3 = PReLU()(SegmentThree_conv)
 
-    concat = Concatenate(axis=1)([flatten_1, flatten_2, flatten_3])
-    dense_1 = Dense(3, init='normal' )(concat)
+
+    concat = Concatenate(axis=1)([ract_1, ract_2, ract_3])
+    Combined_conv = Convolution3D(32, (3, 3, 3), strides=1, padding='Same')(concat)
+    ract_3 = PReLU()(Combined_conv)
+    flatten_1 = Flatten()(ract_3)
+    dense_1 = Dense(3, init='normal')(flatten_1)
     drop1 = Dropout(0.5)(dense_1)
     activation = Activation('softmax')(drop1)
     opt = SGD(lr=0.01)
 
     model = Model(inputs=[SegmentOne_input, SegmentTwo_input, SegmentThree_input], outputs=activation)
-    model.compile(loss='categorical_crossentropy', optimizer='SGD', metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 
     filepath = "weights_SMIC/Late-Triple-weights-improvement" + str(test_index) + "-{epoch:02d}-{val_acc:.2f}.hdf5"
     checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
