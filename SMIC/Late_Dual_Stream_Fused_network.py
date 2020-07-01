@@ -90,6 +90,7 @@ count=0
 for train_index, test_index in loo.split(SegmentOne_training_set):
 
 
+    print("RUN: ",test_index)
 
     val_acc = evaluate(SegmentOne_training_set[train_index],SegmentTwo_training_set[train_index],
      SegmentOne_training_set[test_index],SegmentTwo_training_set[test_index]
