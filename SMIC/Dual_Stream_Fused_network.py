@@ -69,8 +69,8 @@ def evaluate(SegmentOne_train_images,SegmentTwo_train_images, SegmentOne_validat
 
 
 K.set_image_dim_ordering('th')
-SegmentNameOne='LeftEye'
-SegmentNameTwo='RightEye'
+SegmentNameOne='Eyes'
+SegmentNameTwo='Nose'
 sizeH=32
 sizeV=32
 
