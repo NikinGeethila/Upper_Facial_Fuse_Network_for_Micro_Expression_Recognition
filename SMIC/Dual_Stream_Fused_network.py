@@ -73,14 +73,14 @@ SegmentNameOne='Eyes'
 SegmentNameTwo='Nose'
 sizeH=32
 sizeV=32
-
+sizeD=30
 # Load training images and labels that are stored in numpy array
 
-SegmentOne_training_set = numpy.load('numpy_training_datasets/{0}_images_{1}x{2}.npy'.format(SegmentNameOne,sizeH, sizeV))
-SegmentTwo_training_set = numpy.load('numpy_training_datasets/{0}_images_{1}x{2}.npy'.format(SegmentNameTwo,sizeH, sizeV))
+SegmentOne_training_set = numpy.load('numpy_training_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD))
+SegmentTwo_training_set = numpy.load('numpy_training_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD))
 
-SegmentOne_training_labels = numpy.load('numpy_training_datasets/{0}_labels_{1}x{2}.npy'.format(SegmentNameOne,sizeH, sizeV))
-SegmentTwo_training_labels = numpy.load('numpy_training_datasets/{0}_labels_{1}x{2}.npy'.format(SegmentNameTwo,sizeH, sizeV))
+SegmentOne_training_labels = numpy.load('numpy_training_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD))
+SegmentTwo_training_labels = numpy.load('numpy_training_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD))
 
 
 
@@ -122,19 +122,18 @@ SegmentTwo_train_images, SegmentTwo_validation_images, SegmentTwo_train_labels, 
 
 
 # Save validation set in a numpy array
-numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}.npy'.format(SegmentNameOne,sizeH, sizeV), SegmentOne_validation_images)
-numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}.npy'.format(SegmentNameTwo,sizeH, sizeV), SegmentTwo_validation_images)
+numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD), SegmentOne_validation_images)
+numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD), SegmentTwo_validation_images)
 
-numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}.npy'.format(SegmentNameOne,sizeH, sizeV), SegmentOne_validation_labels)
-numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}.npy'.format(SegmentNameTwo,sizeH, sizeV), SegmentTwo_validation_labels)
+numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD), SegmentOne_validation_labels)
+numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD), SegmentTwo_validation_labels)
 
 
 
 # Loading Load validation set from numpy array
 
-# SegmentOne_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}.npy'.format(segmentName,sizeH, sizeV))
-# SegmentTwo_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}.npy'.format(segmentName,sizeH, sizeV))
-# SegmentOne_validation_labels = numpy.load('numpy_validation_datasets/{0}_labels_{1}x{2}.npy'.format(segmentName,sizeH, sizeV))
+# SegmentOne_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD))
+# SegmentTwo_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD))
 
 evaluate(SegmentOne_train_images,SegmentTwo_train_images, SegmentOne_validation_images,SegmentTwo_validation_images,SegmentOne_train_labels,SegmentOne_validation_labels ,0)
 
