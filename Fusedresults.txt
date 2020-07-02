@@ -5,15 +5,15 @@ eyes,nose fuse
 Early
 
 --CAS(ME)^2 (3)= 0.895(with frame add)
---SAMM (5)= 
---SIMC (3)=0.936
+--SAMM (5)= 0.882
+--SIMC (3)= 0.936
 --CASMEII(5)=
 
 Late
 
 --CAS(ME)^2 (3)= 0.921(with frame add)
---SAMM (5)= 
---SIMC (3)=0.981
+--SAMM (5)= 0.926
+--SIMC (3)= 0.981
 --CASMEII(5)=
 
 -----------------------------------------
@@ -23,13 +23,13 @@ left eye, right eye,nose fuse
 Early
 
 --CAS(ME)^2 (3)= 0.895(with frame add)
---SAMM (5)= 
---SIMC (3)=0.930
+--SAMM (5)= 0.860
+--SIMC (3)= 0.930
 --CASMEII(5)=
 
 Late
 
 --CAS(ME)^2 (3)= 0.868(with frame add)
---SAMM (5)= 
---SIMC (3)=0.962
+--SAMM (5)= 0.941
+--SIMC (3)= 0.962
 --CASMEII(5)=
