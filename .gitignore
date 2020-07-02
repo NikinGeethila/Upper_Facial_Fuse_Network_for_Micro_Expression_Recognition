@@ -7,3 +7,7 @@
 **/CAS(ME)2/weights_CAS(ME)2/
 **/CAS(ME)2/numpy_validation_datasets/
 **/CAS(ME)2/numpy_training_datasets/
+**/SAMM/weights_late_microexpfusenet/
+**/SAMM/weights_SAMM/
+**/SAMM/numpy_validation_datasets/
+**/SAMM/numpy_training_datasets/
