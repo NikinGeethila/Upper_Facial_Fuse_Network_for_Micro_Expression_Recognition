@@ -72,7 +72,7 @@ def evaluate(SegmentOne_train_images,SegmentTwo_train_images,SegmentThree_train_
     print (cfm)
     print("accuracy: ",accuracy_score(validation_labels, predictions_labels))
 
-    return accuracy_score(validation_labels, predictions_labels)
+    return accuracy_score(validation_labels, predictions_labels),validation_labels,predictions_labels
 
 
 K.set_image_dim_ordering('th')
@@ -101,20 +101,34 @@ loo = LeaveOneOut()
 loo.get_n_splits(SegmentOne_training_set)
 tot=0
 count=0
+val_labels=[]
+pred_labels=[]
 for train_index, test_index in loo.split(SegmentOne_training_set):
 
     print("RUN: ",test_index)
 
 
-    val_acc = evaluate(SegmentOne_training_set[train_index],SegmentTwo_training_set[train_index],SegmentThree_training_set[train_index],
+    val_acc,val_label,pred_label = evaluate(SegmentOne_training_set[train_index],SegmentTwo_training_set[train_index],SegmentThree_training_set[train_index],
      SegmentOne_training_set[test_index],SegmentTwo_training_set[test_index],SegmentThree_training_set[test_index]
     ,SegmentOne_training_labels[train_index], SegmentOne_training_labels[test_index] ,test_index)
     tot+=val_acc
+    val_labels.extend(val_label)
+    pred_labels.extend(pred_label)
     count+=1
     print("------------------------------------------------------------------------")
     print("validation acc:",val_acc)
     print("------------------------------------------------------------------------")
-print(tot/count)
+print("average acc: ",tot/count)
+cfm = confusion_matrix(val_labels, pred_labels)
+tp_and_fn = cfm.sum(1)
+tp_and_fp = cfm.sum(0)
+tp = cfm.diagonal()
+
+precision = tp / tp_and_fp
+recall = tp / tp_and_fn
+print("precision: ",precision)
+print("recall: ",recall)
+print("F1-score: ",2 * (precision * recall) / (precision + recall))
 
 '''
 
