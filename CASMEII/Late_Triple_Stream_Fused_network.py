@@ -123,6 +123,10 @@ cfm = confusion_matrix(val_labels, pred_labels)
 tp_and_fn = cfm.sum(1)
 tp_and_fp = cfm.sum(0)
 tp = cfm.diagonal()
+print("cfm: \n",cfm)
+print("tp_and_fn: ",tp_and_fn)
+print("tp_and_fp: ",tp_and_fp)
+print("tp: ",tp)
 
 precision = tp / tp_and_fp
 recall = tp / tp_and_fn
