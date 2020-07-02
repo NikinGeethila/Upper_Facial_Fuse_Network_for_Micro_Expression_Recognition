@@ -45,7 +45,7 @@ negativepath = '../../../Datasets/SIMC_E_categorical/Negative/'
 positivepath = '../../../Datasets/SIMC_E_categorical/Positive/'
 surprisepath = '../../../Datasets/SIMC_E_categorical/Surprise/'
 
-segmentName = 'Eyes'
+segmentName = 'RightEye'
 sizeH=32
 sizeV=32
 sizeD=30
@@ -73,11 +73,11 @@ for typepath in (negativepath, positivepath, surprisepath):
                 imgplot = plt.imshow(img)
                 plt.show()
             numpylandmarks = numpy.asarray(landmarks)
-            up = min(numpylandmarks[18][1], numpylandmarks[19][1], numpylandmarks[23][1], numpylandmarks[24][1]) - 20
-            down = max(numpylandmarks[36][1], numpylandmarks[39][1], numpylandmarks[40][1], numpylandmarks[41][1],
-                       numpylandmarks[42][1], numpylandmarks[47][1], numpylandmarks[46][1], numpylandmarks[45][1]) + 10
-            left = min(numpylandmarks[17][0], numpylandmarks[18][0], numpylandmarks[36][0])
+            up = min(numpylandmarks[22][1], numpylandmarks[23][1], numpylandmarks[24][1], numpylandmarks[25][1],
+                     numpylandmarks[26][1]) - 20
+            down = max(numpylandmarks[42][1], numpylandmarks[47][1], numpylandmarks[46][1], numpylandmarks[45][1]) + 10
             right = max(numpylandmarks[26][0], numpylandmarks[25][0], numpylandmarks[45][0])
+            left = min(numpylandmarks[22][0], numpylandmarks[42][0]) - 10
             segment_image = image[up:down, left:right]
             if counting < 1:
                 img = annotate_landmarks(segment_image, landmarks)
