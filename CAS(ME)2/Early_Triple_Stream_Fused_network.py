@@ -78,65 +78,6 @@ def evaluate(SegmentOne_train_images,SegmentTwo_train_images,SegmentThree_train_
 
 
 
-#-----------------------------------------------------------------------------------------------------------------
-#LOOCV
-loo = LeaveOneOut()
-loo.get_n_splits(SegmentOne_training_set)
-tot=0
-count=0
-for train_index, test_index in loo.split(SegmentOne_training_set):
-
-    print("RUN: ",test_index)
-
-
-    val_acc = evaluate(SegmentOne_training_set[train_index],SegmentTwo_training_set[train_index],SegmentThree_training_set[train_index],
-     SegmentOne_training_set[test_index],SegmentTwo_training_set[test_index],SegmentThree_training_set[test_index]
-    ,SegmentOne_training_labels[train_index], SegmentOne_training_labels[test_index] ,test_index)
-    tot+=val_acc
-    count+=1
-    print("------------------------------------------------------------------------")
-    print("validation acc:",val_acc)
-    print("------------------------------------------------------------------------")
-print(tot/count)
-
-'''
-
-
-
-
-#-----------------------------------------------------------------------------------------------------------------
-#Test train split
-
-
-# Spliting the dataset into training and validation sets
-SegmentOne_train_images, SegmentOne_validation_images, SegmentOne_train_labels, SegmentOne_validation_labels =  train_test_split(SegmentOne_training_set, SegmentOne_training_labels, test_size=0.2, random_state=42)
-SegmentTwo_train_images, SegmentTwo_validation_images, SegmentTwo_train_labels, SegmentTwo_validation_labels =  train_test_split(SegmentTwo_training_set, SegmentTwo_training_labels, test_size=0.2, random_state=42)
-SegmentThree_train_images, SegmentThree_validation_images, SegmentThree_train_labels, SegmentThree_validation_labels =  train_test_split(SegmentThree_training_set, SegmentThree_training_labels, test_size=0.2, random_state=42)
-
-
-
-# Save validation set in a numpy array
-numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD), SegmentOne_validation_images)
-numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD), SegmentTwo_validation_images)
-numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameThree,sizeH, sizeV,sizeD), SegmentThree_validation_images)
-
-numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD), SegmentOne_validation_labels)
-numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD), SegmentTwo_validation_labels)
-numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameThree,sizeH, sizeV,sizeD), SegmentThree_validation_labels)
-
-
-
-# Loading Load validation set from numpy array
-
-# SegmentOne_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD))
-# SegmentTwo_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD))
-# SegmentThree_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameThree,sizeH, sizeV,sizeD))
-# SegmentOne_validation_labels = numpy.load('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD))
-
-evaluate(SegmentOne_train_images,SegmentTwo_train_images,SegmentThree_train_images, SegmentOne_validation_images,SegmentTwo_validation_images, SegmentThree_validation_images,SegmentOne_train_labels,SegmentOne_validation_labels ,0)
-
-'''
-
 
 #-----------------------------------------------------------------------------------------------------------------
 #LOOCV
@@ -154,9 +95,9 @@ def loocv():
 
         print("RUN: ",test_index)
 
-        val_acc, val_label, pred_label= evaluate(SegmentOne_training_set[train_index],SegmentTwo_training_set[train_index],
-         SegmentOne_training_set[test_index],SegmentTwo_training_set[test_index]
-        ,SegmentOne_training_labels[train_index], SegmentOne_training_labels[test_index] ,test_index)
+        val_acc, val_label, pred_label= evaluate(SegmentOne_training_set[train_index],SegmentTwo_training_set[train_index],SegmentThree_training_set[train_index],
+     SegmentOne_training_set[test_index],SegmentTwo_training_set[test_index],SegmentThree_training_set[test_index]
+    ,SegmentOne_training_labels[train_index], SegmentOne_training_labels[test_index] ,test_index)
         tot += val_acc
         val_labels.extend(val_label)
         pred_labels.extend(pred_label)
@@ -232,9 +173,9 @@ def kfold():
         # print(segment_traininglabels[train_index])
         # print(segment_traininglabels[test_index])
         print(test_index)
-        val_acc, val_label, pred_label = evaluate(SegmentOne_training_set[train_index],SegmentTwo_training_set[train_index],
-         SegmentOne_training_set[test_index],SegmentTwo_training_set[test_index]
-        ,SegmentOne_training_labels[train_index], SegmentOne_training_labels[test_index] ,test_index)
+        val_acc, val_label, pred_label = evaluate(SegmentOne_training_set[train_index],SegmentTwo_training_set[train_index],SegmentThree_training_set[train_index],
+     SegmentOne_training_set[test_index],SegmentTwo_training_set[test_index],SegmentThree_training_set[test_index]
+    ,SegmentOne_training_labels[train_index], SegmentOne_training_labels[test_index] ,test_index)
         tot += val_acc
         val_labels.extend(val_label)
         pred_labels.extend(pred_label)
@@ -308,7 +249,7 @@ else:
 results=open("../TempResults.txt",'a')
 results.write("---------------------------\n")
 full_path = os.path.realpath(__file__)
-results.write(str(os.path.dirname(full_path))+" {0}_{1}_{2}_{3}_{4}x{5}x{6}\n".format(testtype,SegmentNameOne,SegmentNameTwo,SegmentNameThree,sizeH, sizeV,sizeD))
+results.write(str(__file__)+" {0}_{1}_{2}_{3}_{4}x{5}x{6}\n".format(testtype,SegmentNameOne,SegmentNameTwo,SegmentNameThree,sizeH, sizeV,sizeD))
 results.write("---------------------------\n")
 results.write("accuracy: "+str(accuracy_score(val_labels, pred_labels))+"\n")
 results.write("F1-score: "+str(f1_score(val_labels,pred_labels,average="weighted"))+"\n")
