@@ -1,16 +1,17 @@
 import numpy
 from sklearn.metrics import confusion_matrix
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score,f1_score
 from keras.models import Sequential, Model
 from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Convolution3D, MaxPooling3D
 from keras.layers import Concatenate, Input, concatenate, add, multiply, maximum
 from keras.layers import LeakyReLU,PReLU
 from keras.callbacks import ModelCheckpoint,EarlyStopping,ReduceLROnPlateau,Callback
-from sklearn.model_selection import train_test_split,LeaveOneOut
+from sklearn.model_selection import train_test_split,LeaveOneOut,KFold
 from keras import backend as K
 from keras.optimizers import Adam,SGD
 import timeit
+import os
 
 class myCallback(Callback):
     def on_epoch_end(self, epoch, logs={}):
@@ -72,101 +73,189 @@ def evaluate(SegmentOne_train_images,SegmentTwo_train_images,SegmentThree_train_
     print (cfm)
     print("accuracy: ",accuracy_score(validation_labels, predictions_labels))
 
-    return accuracy_score(validation_labels, predictions_labels),validation_labels,predictions_labels
+    return accuracy_score(validation_labels, predictions_labels), validation_labels, predictions_labels
+
+
+# -----------------------------------------------------------------------------------------------------------------
+# LOOCV
+def loocv():
+    loo = LeaveOneOut()
+    loo.get_n_splits(SegmentOne_training_set)
+    tot = 0
+    count = 0
+    val_labels = []
+    pred_labels = []
+    accs = []
+    accs2 = []
+    for train_index, test_index in loo.split(SegmentOne_training_set):
+        print("RUN: ", test_index)
+
+        val_acc, val_label, pred_label = evaluate(SegmentOne_training_set[train_index],
+                                                  SegmentTwo_training_set[train_index],
+                                                  SegmentThree_training_set[train_index],
+                                                  SegmentOne_training_set[test_index],
+                                                  SegmentTwo_training_set[test_index],
+                                                  SegmentThree_training_set[test_index]
+                                                  , SegmentOne_training_labels[train_index],
+                                                  SegmentOne_training_labels[test_index], test_index)
+        tot += val_acc
+        val_labels.extend(val_label)
+        pred_labels.extend(pred_label)
+        accs.append(val_acc)
+        accs2.append(SegmentOne_training_labels[test_index])
+        count += 1
+        print("------------------------------------------------------------------------")
+        print("validation acc:", val_acc)
+        print("------------------------------------------------------------------------")
+
+    cfm = confusion_matrix(val_labels, pred_labels)
+    # tp_and_fn = sum(cfm.sum(1))
+    # tp_and_fp = sum(cfm.sum(0))
+    # tp = sum(cfm.diagonal())
+    print("cfm: \n", cfm)
+    # print("tp_and_fn: ",tp_and_fn)
+    # print("tp_and_fp: ",tp_and_fp)
+    # print("tp: ",tp)
+    #
+    # precision = tp / tp_and_fp
+    # recall = tp / tp_and_fn
+    # print("precision: ",precision)
+    # print("recall: ",recall)
+    # print("F1-score: ",f1_score(val_labels,pred_labels,average="macro"))
+    print("F1-score: ", f1_score(val_labels, pred_labels, average="weighted"))
+    return val_labels, pred_labels
+
+
+# -----------------------------------------------------------------------------------------------------------------
+# Test train split
+
+def split():
+    # Spliting the dataset into training and validation sets
+    SegmentOne_train_images, SegmentOne_validation_images, SegmentOne_train_labels, SegmentOne_validation_labels = train_test_split(
+        SegmentOne_training_set, SegmentOne_training_labels, test_size=0.2, random_state=42)
+    SegmentTwo_train_images, SegmentTwo_validation_images, SegmentTwo_train_labels, SegmentTwo_validation_labels = train_test_split(
+        SegmentTwo_training_set, SegmentTwo_training_labels, test_size=0.2, random_state=42)
+
+    # Save validation set in a numpy array
+    numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne, sizeH, sizeV, sizeD),
+               SegmentOne_validation_images)
+    numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameTwo, sizeH, sizeV, sizeD),
+               SegmentTwo_validation_images)
+
+    numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameOne, sizeH, sizeV, sizeD),
+               SegmentOne_validation_labels)
+    numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameTwo, sizeH, sizeV, sizeD),
+               SegmentTwo_validation_labels)
+
+    # Loading Load validation set from numpy array
+
+    # SegmentOne_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD))
+    # SegmentTwo_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD))
+
+    evaluate(SegmentOne_train_images, SegmentTwo_train_images, SegmentOne_validation_images,
+             SegmentTwo_validation_images, SegmentOne_train_labels, SegmentOne_validation_labels, 0)
+
+
+def kfold():
+    kf = KFold(n_splits=10, random_state=42, shuffle=True)
+    # kf.get_n_splits(segment_training_set)
+    tot = 0
+    count = 0
+    accs = []
+    accs2 = []
+
+    val_labels = []
+    pred_labels = []
+    for train_index, test_index in kf.split(SegmentOne_training_set):
+        # print(segment_traininglabels[train_index])
+        # print(segment_traininglabels[test_index])
+        print(test_index)
+        val_acc, val_label, pred_label = evaluate(SegmentOne_training_set[train_index],
+                                                  SegmentTwo_training_set[train_index],
+                                                  SegmentThree_training_set[train_index],
+                                                  SegmentOne_training_set[test_index],
+                                                  SegmentTwo_training_set[test_index],
+                                                  SegmentThree_training_set[test_index]
+                                                  , SegmentOne_training_labels[train_index],
+                                                  SegmentOne_training_labels[test_index], test_index)
+        tot += val_acc
+        val_labels.extend(val_label)
+        pred_labels.extend(pred_label)
+        accs.append(val_acc)
+        accs2.append(SegmentOne_training_labels[test_index])
+        count += 1
+        print("------------------------------------------------------------------------")
+        print("validation acc:", val_acc)
+        print("------------------------------------------------------------------------")
+    print("accuracy: ", accuracy_score(val_labels, pred_labels))
+    cfm = confusion_matrix(val_labels, pred_labels)
+    # tp_and_fn = sum(cfm.sum(1))
+    # tp_and_fp = sum(cfm.sum(0))
+    # tp = sum(cfm.diagonal())
+    print("cfm: \n", cfm)
+    # print("tp_and_fn: ",tp_and_fn)
+    # print("tp_and_fp: ",tp_and_fp)
+    # print("tp: ",tp)
+    #
+    # precision = tp / tp_and_fp
+    # recall = tp / tp_and_fn
+    # print("precision: ",precision)
+    # print("recall: ",recall)
+    # print("F1-score: ",f1_score(val_labels,pred_labels,average="macro"))
+    print("F1-score: ", f1_score(val_labels, pred_labels, average="weighted"))
+    return val_labels, pred_labels
+
+
+####################################
+# edit params
+K.set_image_dim_ordering('th')
+
+SegmentNameOne = 'LeftEye'
+SegmentNameTwo = 'RightEye'
+SegmentNameThree = 'Nose'
+sizeH = 32
+sizeV = 32
+sizeD = 30
+testtype = 'kfold'
+####################################
 
 
 K.set_image_dim_ordering('th')
-SegmentNameOne='LeftEye'
-SegmentNameTwo='RightEye'
-SegmentNameThree='Nose'
-sizeH=32
-sizeV=32
-sizeD=30
+
 # Load training images and labels that are stored in numpy array
 
-SegmentOne_training_set = numpy.load('numpy_training_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD))
-SegmentTwo_training_set = numpy.load('numpy_training_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD))
-SegmentThree_training_set = numpy.load('numpy_training_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameThree,sizeH, sizeV,sizeD))
+SegmentOne_training_set = numpy.load(
+    'numpy_training_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne, sizeH, sizeV, sizeD))
+SegmentTwo_training_set = numpy.load(
+    'numpy_training_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameTwo, sizeH, sizeV, sizeD))
+SegmentThree_training_set = numpy.load(
+    'numpy_training_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameThree, sizeH, sizeV, sizeD))
 
-SegmentOne_training_labels = numpy.load('numpy_training_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD))
-SegmentTwo_training_labels = numpy.load('numpy_training_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD))
-SegmentThree_training_labels = numpy.load('numpy_training_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameThree,sizeH, sizeV,sizeD))
+SegmentOne_training_labels = numpy.load(
+    'numpy_training_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameOne, sizeH, sizeV, sizeD))
+SegmentTwo_training_labels = numpy.load(
+    'numpy_training_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameTwo, sizeH, sizeV, sizeD))
+SegmentThree_training_labels = numpy.load(
+    'numpy_training_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameThree, sizeH, sizeV, sizeD))
 
+if testtype == "kfold":
+    val_labels, pred_labels = kfold()
+elif testtype == "loocv":
+    val_labels, pred_labels = loocv()
+elif testtype == "split":
+    val_labels, pred_labels = split()
+else:
+    print("error")
 
+# ---------------------------------------------------------------------------------------------------
+# write to results
 
-#-----------------------------------------------------------------------------------------------------------------
-#LOOCV
-loo = LeaveOneOut()
-loo.get_n_splits(SegmentOne_training_set)
-tot=0
-count=0
-val_labels=[]
-pred_labels=[]
-for train_index, test_index in loo.split(SegmentOne_training_set):
-
-    print("RUN: ",test_index)
-
-
-    val_acc,val_label,pred_label = evaluate(SegmentOne_training_set[train_index],SegmentTwo_training_set[train_index],SegmentThree_training_set[train_index],
-     SegmentOne_training_set[test_index],SegmentTwo_training_set[test_index],SegmentThree_training_set[test_index]
-    ,SegmentOne_training_labels[train_index], SegmentOne_training_labels[test_index] ,test_index)
-    tot+=val_acc
-    val_labels.extend(val_label)
-    pred_labels.extend(pred_label)
-    count+=1
-    print("------------------------------------------------------------------------")
-    print("validation acc:",val_acc)
-    print("------------------------------------------------------------------------")
-print("average acc: ",tot/count)
-cfm = confusion_matrix(val_labels, pred_labels)
-tp_and_fn = sum(cfm.sum(1))
-tp_and_fp = sum(cfm.sum(0))
-tp = sum(cfm.diagonal())
-print("cfm: \n",cfm)
-print("tp_and_fn: ",tp_and_fn)
-print("tp_and_fp: ",tp_and_fp)
-print("tp: ",tp)
-
-precision = tp / tp_and_fp
-recall = tp / tp_and_fn
-print("precision: ",precision)
-print("recall: ",recall)
-print("F1-score: ",2 * (precision * recall) / (precision + recall))
-
-'''
-
-
-
-
-#-----------------------------------------------------------------------------------------------------------------
-#Test train split
-
-
-# Spliting the dataset into training and validation sets
-SegmentOne_train_images, SegmentOne_validation_images, SegmentOne_train_labels, SegmentOne_validation_labels =  train_test_split(SegmentOne_training_set, SegmentOne_training_labels, test_size=0.2, random_state=42)
-SegmentTwo_train_images, SegmentTwo_validation_images, SegmentTwo_train_labels, SegmentTwo_validation_labels =  train_test_split(SegmentTwo_training_set, SegmentTwo_training_labels, test_size=0.2, random_state=42)
-SegmentThree_train_images, SegmentThree_validation_images, SegmentThree_train_labels, SegmentThree_validation_labels =  train_test_split(SegmentThree_training_set, SegmentThree_training_labels, test_size=0.2, random_state=42)
-
-
-
-# Save validation set in a numpy array
-numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD), SegmentOne_validation_images)
-numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD), SegmentTwo_validation_images)
-numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameThree,sizeH, sizeV,sizeD), SegmentThree_validation_images)
-
-numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD), SegmentOne_validation_labels)
-numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD), SegmentTwo_validation_labels)
-numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameThree,sizeH, sizeV,sizeD), SegmentThree_validation_labels)
-
-
-
-# Loading Load validation set from numpy array
-
-# SegmentOne_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD))
-# SegmentTwo_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD))
-# SegmentThree_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameThree,sizeH, sizeV,sizeD))
-# SegmentOne_validation_labels = numpy.load('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD))
-
-evaluate(SegmentOne_train_images,SegmentTwo_train_images,SegmentThree_train_images, SegmentOne_validation_images,SegmentTwo_validation_images, SegmentThree_validation_images,SegmentOne_train_labels,SegmentOne_validation_labels ,0)
-
-'''
+results = open("../TempResults.txt", 'a')
+results.write("---------------------------\n")
+full_path = os.path.realpath(__file__)
+results.write(
+    str(__file__) + " {0}_{1}_{2}_{3}_{4}x{5}x{6}\n".format(testtype, SegmentNameOne, SegmentNameTwo, SegmentNameThree,
+                                                            sizeH, sizeV, sizeD))
+results.write("---------------------------\n")
+results.write("accuracy: " + str(accuracy_score(val_labels, pred_labels)) + "\n")
+results.write("F1-score: " + str(f1_score(val_labels, pred_labels, average="weighted")) + "\n")
