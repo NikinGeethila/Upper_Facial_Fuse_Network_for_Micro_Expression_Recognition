@@ -1,5 +1,40 @@
 ---------------------------
-/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/CAS(ME)2 kfold_Eyes_Nose_32x32x30
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/CAS(ME)2/Early_Dual_Stream_Fused_network.py kfold_Eyes_Nose_32x32x30
+---------------------------
+accuracy: 0.7894736842105263
+F1-score: 0.7747275820484107
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/CAS(ME)2/Late_Dual_Stream_Fused_network.py kfold_Eyes_Nose_32x32x30
+---------------------------
+accuracy: 0.8157894736842105
+F1-score: 0.7774974951376201
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/CAS(ME)2/Early_Triple_Stream_Fused_network.py kfold_LeftEye_RightEye_Nose_32x32x30
 ---------------------------
 accuracy: 0.7631578947368421
-F1-score: 0.7321277793414016
+F1-score: 0.7065820579818339
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/CAS(ME)2/Late_Triple_Stream_Fused_network.py kfold_LeftEye_RightEye_Nose_32x32x30
+---------------------------
+accuracy: 0.7631578947368421
+F1-score: 0.7517088174982911
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/CASMEII/Early_Dual_Stream_Fused_network.py kfold_Eyes_Nose_32x32x30
+---------------------------
+accuracy: 0.6184738955823293
+F1-score: 0.6119983094506576
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/CASMEII/Late_Dual_Stream_Fused_network.py kfold_Eyes_Nose_32x32x30
+---------------------------
+accuracy: 0.606425702811245
+F1-score: 0.5967285698235951
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/CASMEII/Early_Triple_Stream_Fused_network.py kfold_LeftEye_RightEye_Nose_32x32x30
+---------------------------
+accuracy: 0.6506024096385542
+F1-score: 0.6439816159237366
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SAMM/Early_Dual_Stream_Fused_network.py kfold_Eyes_Nose_32x32x30
+---------------------------
+accuracy: 0.6764705882352942
+F1-score: 0.6380203122184547
