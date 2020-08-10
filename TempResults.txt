@@ -1,0 +1,5 @@
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/CAS(ME)2 kfold_Eyes_Nose_32x32x30
+---------------------------
+accuracy: 0.7631578947368421
+F1-score: 0.7321277793414016
