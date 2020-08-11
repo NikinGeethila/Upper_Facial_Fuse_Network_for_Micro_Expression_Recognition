@@ -98,3 +98,63 @@ F1-score: 0.8670539986329459
 ---------------------------
 accuracy: 0.9473684210526315
 F1-score: 0.9469134065109296
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SAMM/Early_Dual_Stream_Fused_network.py loocv_Eyes_Nose_32x32x30
+---------------------------
+accuracy: 0.8970588235294118
+F1-score: 0.8891384960132104
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SAMM/Late_Dual_Stream_Fused_network.py loocv_Eyes_Nose_32x32x30
+---------------------------
+accuracy: 0.9264705882352942
+F1-score: 0.92489175832396
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SAMM/Early_Triple_Stream_Fused_network.py loocv_LeftEye_RightEye_Nose_32x32x30
+---------------------------
+accuracy: 0.8823529411764706
+F1-score: 0.8712095460740208
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SMIC/Early_Dual_Stream_Fused_network.py loocv_Eyes_Nose_32x32x30
+---------------------------
+accuracy: 0.9554140127388535
+F1-score: 0.9552527793472907
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SMIC/Late_Dual_Stream_Fused_network.py loocv_Eyes_Nose_32x32x30
+---------------------------
+accuracy: 0.9617834394904459
+F1-score: 0.9615892638300743
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SMIC/Early_Triple_Stream_Fused_network.py loocv_LeftEye_RightEye_Nose_32x32x30
+---------------------------
+accuracy: 0.9235668789808917
+F1-score: 0.9228275808765227
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SAMM/Late_Triple_Stream_Fused_network.py loocv_LeftEye_RightEye_Nose_32x32x30
+---------------------------
+accuracy: 0.9338235294117647
+F1-score: 0.9341153127917834
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SMIC/Late_Triple_Stream_Fused_network.py loocv_LeftEye_RightEye_Nose_32x32x30
+---------------------------
+accuracy: 0.9681528662420382
+F1-score: 0.9679635300800101
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/CASMEII/Early_Dual_Stream_Fused_network.py loocv_Eyes_Nose_32x32x30
+---------------------------
+accuracy: 0.9036144578313253
+F1-score: 0.9008877024178211
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/CASMEII/Late_Dual_Stream_Fused_network.py loocv_Eyes_Nose_32x32x30
+---------------------------
+accuracy: 0.963855421686747
+F1-score: 0.9631649893033256
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/CASMEII/Early_Triple_Stream_Fused_network.py loocv_LeftEye_RightEye_Nose_32x32x30
+---------------------------
+accuracy: 0.927710843373494
+F1-score: 0.9257680924309748
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/CASMEII/Late_Triple_Stream_Fused_network.py loocv_LeftEye_RightEye_Nose_32x32x30
+---------------------------
+accuracy: 0.963855421686747
+F1-score: 0.9634775667502966
