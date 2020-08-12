@@ -15,3 +15,7 @@
 **/CASMEII/weights_CASMEII/
 **/CASMEII/numpy_validation_datasets/
 **/CASMEII/numpy_training_datasets/
+**/SASE-FE_Tests/weights_SASE-FE/
+**/SASE-FE_Tests/numpy_validation_datasets/
+**/SASE-FE_Tests/numpy_training_datasets/
+
