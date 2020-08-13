@@ -177,21 +177,21 @@ def kfold():
 
     val_labels = []
     pred_labels = []
-    for train_index, test_index in kf.split(SegmentOne_training_set):
+    for train_index, test_index in kf.split(testerOne_set):
         # print(segment_traininglabels[train_index])
         # print(segment_traininglabels[test_index])
         print(test_index)
-        val_acc, val_label, pred_label = evaluate(SegmentOne_training_set[train_index],
-                                                  SegmentTwo_training_set[train_index],
-                                                  SegmentOne_training_set[test_index],
-                                                  SegmentTwo_training_set[test_index]
-                                                  , SegmentOne_training_labels[train_index],
-                                                  SegmentOne_training_labels[test_index], test_index)
+        val_acc, val_label, pred_label = evaluate(numpy.concatenate([SegmentOne_training_set,testerOne_set[train_index]]),
+                                                  numpy.concatenate([SegmentTwo_training_set,testerTwo_set[train_index]]),
+                                                  testerOne_set[test_index],
+                                                  testerTwo_set[test_index]
+                                                  , numpy.concatenate([SegmentOne_training_labels,testerOne_labels[train_index]]),
+                                                  testerOne_labels[test_index], test_index)
         tot += val_acc
         val_labels.extend(val_label)
         pred_labels.extend(pred_label)
         accs.append(val_acc)
-        accs2.append(SegmentOne_training_labels[test_index])
+        accs2.append(testerOne_labels[test_index])
         count += 1
         print("------------------------------------------------------------------------")
         print("validation acc:", val_acc)
@@ -218,17 +218,22 @@ def kfold():
 # edit params
 K.set_image_dim_ordering('th')
 
-SegmentNameOne = 'Eyes'
-SegmentNameTwo = 'Nose'
+SegmentNameOne = 'Nose'
+testerOne=SegmentNameOne+'-Fake'
+SegmentNameTwo = 'Mouth'
+testerTwo=SegmentNameTwo+'-Fake'
+SegmentNameOne=SegmentNameOne+'-True'
+SegmentNameTwo=SegmentNameTwo+'-True'
 sizeH = 32
 sizeV = 32
 sizeD = 30
-testtype = 'loocv'
+testtype = 'kfold'
 ####################################
 
 K.set_image_dim_ordering('th')
 
 # Load training images and labels that are stored in numpy array
+
 
 SegmentOne_training_set = numpy.load(
     'numpy_training_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne, sizeH, sizeV, sizeD))
@@ -239,6 +244,19 @@ SegmentOne_training_labels = numpy.load(
     'numpy_training_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameOne, sizeH, sizeV, sizeD))
 SegmentTwo_training_labels = numpy.load(
     'numpy_training_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameTwo, sizeH, sizeV, sizeD))
+
+
+
+
+testerOne_set = numpy.load(
+    'numpy_training_datasets/{0}_images_{1}x{2}x{3}.npy'.format(testerOne, sizeH, sizeV, sizeD))
+testerTwo_set = numpy.load(
+    'numpy_training_datasets/{0}_images_{1}x{2}x{3}.npy'.format(testerTwo, sizeH, sizeV, sizeD))
+
+testerOne_labels = numpy.load(
+    'numpy_training_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(testerOne, sizeH, sizeV, sizeD))
+testerTwo_labels = numpy.load(
+    'numpy_training_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(testerTwo, sizeH, sizeV, sizeD))
 
 if testtype=="kfold":
     val_labels, pred_labels=kfold()
@@ -253,12 +271,12 @@ else:
 #---------------------------------------------------------------------------------------------------
 # write to results
 
-results=open("../TempResults.txt",'a')
+results = open("../TempResults.txt", 'a')
 results.write("---------------------------\n")
 full_path = os.path.realpath(__file__)
-results.write(str(os.path.dirname(full_path))+" {0}_{1}_{2}x{3}x{4}-10\n".format(testtype,segmentName,sizeH, sizeV,sizeD))
+results.write(
+    str(__file__) + " {0}_{1}_{2}_{3}x{4}x{5}\n".format(testtype, SegmentNameOne, SegmentNameTwo, sizeH, sizeV,
+                                                        sizeD))
 results.write("---------------------------\n")
-results.write("accuracy: "+str(ascavg)+"\n")
-results.write("F1-score: "+str(fscavg)+"\n")
-results.write("test accuracy: "+str(tascavg)+"\n")
-results.write("test F1-score: "+str(tfscavg)+"\n")
+results.write("accuracy: " + str(accuracy_score(val_labels, pred_labels)) + "\n")
+results.write("F1-score: " + str(f1_score(val_labels, pred_labels, average="weighted")) + "\n")
