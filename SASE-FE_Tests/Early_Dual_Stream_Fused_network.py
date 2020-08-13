@@ -214,24 +214,25 @@ SegmentOne_training_labels = numpy.load(
 SegmentTwo_training_labels = numpy.load(
     'numpy_training_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameTwo, sizeH, sizeV, sizeD))
 
-if testtype == "kfold":
-    val_labels, pred_labels = kfold()
-elif testtype == "loocv":
-    val_labels, pred_labels = loocv()
-elif testtype == "split":
-    val_labels, pred_labels = split()
+if testtype=="kfold":
+    val_labels, pred_labels=kfold()
+elif testtype=="loocv":
+    val_labels, pred_labels=loocv()
+elif testtype=="split":
+    ascavg,tascavg,fscavg,tfscavg=split()
 else:
     print("error")
 
-# ---------------------------------------------------------------------------------------------------
+
+#---------------------------------------------------------------------------------------------------
 # write to results
 
-results = open("../TempResults.txt", 'a')
+results=open("../TempResults.txt",'a')
 results.write("---------------------------\n")
 full_path = os.path.realpath(__file__)
-results.write(
-    str(__file__) + " {0}_{1}_{2}_{3}x{4}x{5}\n".format(testtype, SegmentNameOne, SegmentNameTwo, sizeH, sizeV,
-                                                        sizeD))
+results.write(str(os.path.dirname(full_path))+" {0}_{1}_{2}x{3}x{4}-10\n".format(testtype,segmentName,sizeH, sizeV,sizeD))
 results.write("---------------------------\n")
-results.write("accuracy: " + str(accuracy_score(val_labels, pred_labels)) + "\n")
-results.write("F1-score: " + str(f1_score(val_labels, pred_labels, average="weighted")) + "\n")
+results.write("accuracy: "+str(ascavg)+"\n")
+results.write("F1-score: "+str(fscavg)+"\n")
+results.write("test accuracy: "+str(tascavg)+"\n")
+results.write("test F1-score: "+str(tfscavg)+"\n")
