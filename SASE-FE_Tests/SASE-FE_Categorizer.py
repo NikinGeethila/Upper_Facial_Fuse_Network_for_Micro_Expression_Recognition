@@ -3,12 +3,12 @@ import shutil
 import cv2
 
 
-path="../../../Datasets/SASE-FE/sase_fe_database-001/FakeTrue_DB/"
+path="../../sase_fe_database-001/FakeTrue_DB/"
 
 subjectlisting = os.listdir(path)
 
 
-targetpath="../../../Datasets/SASE-FE_Categorical/"
+targetpath="../../SASE-FE_Categorical/"
 
 if os.path.exists(targetpath ):
     shutil.rmtree(targetpath )
