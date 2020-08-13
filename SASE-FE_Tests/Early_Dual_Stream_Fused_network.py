@@ -115,31 +115,57 @@ def loocv():
 # Test train split
 
 def split():
+    acc = []
+    tacc = []
+    fsc = []
+    tfsc = []
+    for i in range(10):
 
-    # Spliting the dataset into training and validation sets
-    SegmentOne_train_images, SegmentOne_validation_images, SegmentOne_train_labels, SegmentOne_validation_labels = train_test_split(
-        SegmentOne_training_set, SegmentOne_training_labels, test_size=0.2, random_state=42)
-    SegmentTwo_train_images, SegmentTwo_validation_images, SegmentTwo_train_labels, SegmentTwo_validation_labels = train_test_split(
-        SegmentTwo_training_set, SegmentTwo_training_labels, test_size=0.2, random_state=42)
+        # Spliting the dataset into training and validation sets
+        SegmentOne_train_images, SegmentOne_validation_images, SegmentOne_train_labels, SegmentOne_validation_labels = train_test_split(
+            SegmentOne_training_set, SegmentOne_training_labels, test_size=0.2, random_state=42)
+        SegmentTwo_train_images, SegmentTwo_validation_images, SegmentTwo_train_labels, SegmentTwo_validation_labels = train_test_split(
+            SegmentTwo_training_set, SegmentTwo_training_labels, test_size=0.2, random_state=42)
 
-    # Save validation set in a numpy array
-    numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne, sizeH, sizeV, sizeD),
-               SegmentOne_validation_images)
-    numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameTwo, sizeH, sizeV, sizeD),
-               SegmentTwo_validation_images)
+        # Save validation set in a numpy array
+        numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne, sizeH, sizeV, sizeD),
+                   SegmentOne_validation_images)
+        numpy.save('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameTwo, sizeH, sizeV, sizeD),
+                   SegmentTwo_validation_images)
 
-    numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameOne, sizeH, sizeV, sizeD),
-               SegmentOne_validation_labels)
-    numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameTwo, sizeH, sizeV, sizeD),
-               SegmentTwo_validation_labels)
+        numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameOne, sizeH, sizeV, sizeD),
+                   SegmentOne_validation_labels)
+        numpy.save('numpy_validation_datasets/{0}_labels_{1}x{2}x{3}.npy'.format(SegmentNameTwo, sizeH, sizeV, sizeD),
+                   SegmentTwo_validation_labels)
 
-    # Loading Load validation set from numpy array
+        # Loading Load validation set from numpy array
 
-    # SegmentOne_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD))
-    # SegmentTwo_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD))
+        # SegmentOne_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameOne,sizeH, sizeV,sizeD))
+        # SegmentTwo_validation_images = numpy.load('numpy_validation_datasets/{0}_images_{1}x{2}x{3}.npy'.format(SegmentNameTwo,sizeH, sizeV,sizeD))
 
-    evaluate(SegmentOne_train_images, SegmentTwo_train_images, SegmentOne_validation_images,
-             SegmentTwo_validation_images, SegmentOne_train_labels, SegmentOne_validation_labels, 0)
+        evaluate(SegmentOne_train_images, SegmentTwo_train_images, SegmentOne_validation_images,
+                 SegmentTwo_validation_images, SegmentOne_train_labels, SegmentOne_validation_labels, 0)
+
+        print("--------------Test---------------")
+        predictions = model.predict([test_images])
+        predictions_labels = numpy.argmax(predictions, axis=1)
+        validation_labels = numpy.argmax(test_labels, axis=1)
+        cfm = confusion_matrix(validation_labels, predictions_labels)
+        print(cfm)
+        print("accuracy: ", accuracy_score(validation_labels, predictions_labels))
+        print("F1-score: ", f1_score(validation_labels, predictions_labels, average="weighted"))
+        acc.append(accuracy_score(val_labels, pred_labels))
+        fsc.append(f1_score(val_labels, pred_labels, average="weighted"))
+        tacc.append(accuracy_score(validation_labels, predictions_labels))
+        tfsc.append(f1_score(validation_labels, predictions_labels, average="weighted"))
+
+
+    ascavg = sum(acc) / len(acc)
+    tascavg = sum(tacc) / len(tacc)
+    fscavg = sum(fsc) / len(fsc)
+    tfscavg = sum(tfsc) / len(tfsc)
+
+    return ascavg, tascavg, fscavg, tfscavg
 
 def kfold():
     kf = KFold(n_splits=10, random_state=42, shuffle=True)
