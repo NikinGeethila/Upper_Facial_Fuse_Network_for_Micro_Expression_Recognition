@@ -158,3 +158,43 @@ F1-score: 0.9257680924309748
 ---------------------------
 accuracy: 0.963855421686747
 F1-score: 0.9634775667502966
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SASE-FE_Tests/Early_Dual_Stream_Fused_network.py kfold_Eyes-True_Nose-True_32x32x30
+---------------------------
+accuracy: 0.2953020134228188
+F1-score: 0.29729607725420637
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SASE-FE_Tests/Early_Dual_Stream_Fused_network.py kfold_Nose-True_Mouth-True_32x32x30
+---------------------------
+accuracy: 0.37919463087248323
+F1-score: 0.3759570540162471
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SASE-FE_Tests/Early_Dual_Stream_Fused_network.py kfold_Eyes-True_Mouth-True_32x32x30
+---------------------------
+accuracy: 0.4865771812080537
+F1-score: 0.47324462257007827
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SASE-FE_Tests/Early_Dual_Stream_Fused_network.py kfold_LeftEye-True_RightEye-True_32x32x30
+---------------------------
+accuracy: 0.37919463087248323
+F1-score: 0.3729966736341515
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SASE-FE_Tests/Late_Dual_Stream_Fused_network.py kfold_Nose-True_Mouth-True_32x32x30
+---------------------------
+accuracy: 0.3187919463087248
+F1-score: 0.30160778750318745
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SASE-FE_Tests/Late_Dual_Stream_Fused_network.py kfold_Eyes-True_Nose-True_32x32x30
+---------------------------
+accuracy: 0.2953020134228188
+F1-score: 0.27865158479430135
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SASE-FE_Tests/Late_Dual_Stream_Fused_network.py kfold_Eyes-True_Mouth-True_32x32x30
+---------------------------
+accuracy: 0.3724832214765101
+F1-score: 0.36658518732031203
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SASE-FE_Tests/Late_Dual_Stream_Fused_network.py kfold_LeftEye-True_RightEye-True_32x32x30
+---------------------------
+accuracy: 0.31543624161073824
+F1-score: 0.2963366611893965
