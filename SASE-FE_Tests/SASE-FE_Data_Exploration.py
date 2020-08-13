@@ -2,7 +2,7 @@ import os
 
 
 
-path="../../SASE-FE_Categorical_truevsfake/true/"
+path="../../SASE-FE_Categorical_truevsfake_reduced/true/"
 
 
 
