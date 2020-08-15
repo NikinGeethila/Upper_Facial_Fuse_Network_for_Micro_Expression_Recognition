@@ -198,3 +198,33 @@ F1-score: 0.36658518732031203
 ---------------------------
 accuracy: 0.31543624161073824
 F1-score: 0.2963366611893965
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SASE-FE_Tests/Early_Triple_Stream_Fused_network.py kfold_LeftEye-True_RightEye-True_Nose-True_32x32x30
+---------------------------
+accuracy: 0.3939393939393939
+F1-score: 0.38270301585395067
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SASE-FE_Tests/Early_Triple_Stream_Fused_network.py kfold_Eyes-True_Nose-True_Mouth-True_32x32x30
+---------------------------
+accuracy: 0.45454545454545453
+F1-score: 0.45804556563960985
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SASE-FE_Tests/Early_Triple_Stream_Fused_network.py kfold_LeftEye-True_RightEye-True_Mouth-True_32x32x30
+---------------------------
+accuracy: 0.4276094276094276
+F1-score: 0.41603493979113737
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SASE-FE_Tests/Late_Triple_Stream_Fused_network.py kfold_Eyes-True_Nose-True_Mouth-True_32x32x30
+---------------------------
+accuracy: 0.4074074074074074
+F1-score: 0.37483288848095536
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SASE-FE_Tests/Late_Triple_Stream_Fused_network.py kfold_RightEye-True_LeftEye-True_Mouth-True_32x32x30
+---------------------------
+accuracy: 0.41414141414141414
+F1-score: 0.4050104191661764
+---------------------------
+/home/student/Nikin/Upper_Facial_Fuse_Network_for_Micro_Expression_Recognition/SASE-FE_Tests/Late_Triple_Stream_Fused_network.py kfold_RightEye-True_LeftEye-True_Nose-True_32x32x30
+---------------------------
+accuracy: 0.38047138047138046
+F1-score: 0.3613334755888739
