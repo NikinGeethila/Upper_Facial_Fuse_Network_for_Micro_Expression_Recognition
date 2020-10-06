@@ -234,9 +234,9 @@ def kfold():
 # edit params
 K.set_image_dim_ordering('th')
 
-SegmentNameOne = 'Eyes'
-SegmentNameTwo = 'Nose'
-SegmentNameThree = 'Mouth'
+SegmentNameOne = 'RightEye'
+SegmentNameTwo = 'LeftEye'
+SegmentNameThree = 'Nose'
 
 testerOne=SegmentNameOne+'-Fake'
 
